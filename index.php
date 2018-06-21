@@ -31,7 +31,7 @@ $app = new \Slim\Slim(array(
 ));
 
 $app->add(new \Slim\Middleware\SessionCookie(array(
-	'secret' => 'dolcinaya',
+	'secret' => getenv('SLIM_COOKIE_SECRET'),
 	'httponly' => true,
 	'name' => 'lenox_hill_premedical_session',
 	'expires' => '100 minutes' //time between clicks.
