@@ -1,0 +1,10 @@
+stripe-php-3.4.0/
+Slim/
+app.yaml
+public/css/bootstrap*
+public/images/
+public/js/*
+!public/js/mark.js
+!public/js/mark1.js
+!public/js/timer.js
+public/robots.txt

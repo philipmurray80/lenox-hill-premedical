@@ -1,0 +1,296 @@
+#header {
+	position:fixed;
+	top:0;
+	left:0;
+	right:0;
+	height:50px;
+	background-color:gray;
+	text-align:center;
+}
+
+#header_table {
+    	width:100%;
+}
+
+#header_table td {
+    	width:33%;
+}
+
+.mcat_header_links {
+	padding:10px;
+	font-size:0.9em;
+}
+
+#non-content {
+	position:fixed;
+	top:60px;
+	left:0;
+	right:0;
+	bottom:60px;
+}
+
+#passage {
+	width:48%;
+	position:fixed;
+	left:0;
+	top:50px;
+	bottom:50px;
+	overflow:scroll;
+	padding:1%;
+}
+
+#passage span.passage_equation {
+	display: block;
+	text-align: center;
+}
+
+#questions span.question_equation {
+	display: block;
+	text-align: center;
+	margin-top:5px;
+	margin-bottom:5px;
+}
+
+#passage table {
+	border-collapse: collapse; 
+	border: solid thin;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#questions table {
+	border-collapse: collapse; 
+	border: solid thin;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+#questions thead {
+	border: solid thin;
+}
+
+#questions td {
+	padding: 3px;
+}
+
+#questions th {
+	padding: 3px;
+	border: solid thin;
+}
+
+#passage td {
+	padding:3px;
+	border: solid thin;
+}
+
+#passage b {
+	font-weight:normal;
+	background-color:yellow;
+	cursor:pointer;
+}
+
+#questions {
+	width:48%;
+	position:fixed;
+	left:50%;
+	top:50px;
+	bottom:50px;
+	overflow:scroll;
+	padding:1%;
+}
+
+#footer {
+	position:fixed;
+	bottom:0;
+	left:0;
+	right:0;
+	height: 50px;
+	background-color:gray;
+	text-align:center;
+}
+
+#footer_table {
+    width:100%
+}
+
+#footer_table td {
+    width:33%;
+}
+
+#footer_right {
+    float:right;
+}
+
+#footer_left {
+    float:left;
+}
+
+#footer_center {
+    font-family:sans-serif;
+}
+
+
+#timer {
+    	float:right;
+    	padding:10px;
+	color: white;
+}
+
+#paginator {
+    	float:left;
+    	padding:10px;
+	color: white;
+}
+
+#logo_for_full_length_header {
+	padding:10px;
+    	font-family:sans-serif;
+    	color:white;
+}
+
+.mcat_submit_button {
+	height:30px;
+	width:130px;
+	margin:10px;
+}
+
+.mcat_marked_button {
+	height:30px;
+	width:130px;
+	margin:10px;
+	background-color: pink;
+}
+
+.mcat_answer_bubble_and_letter {
+	display:block;
+	width:45px;
+	float:left;
+}
+.mcat_solution_button {
+	color:blue;
+	margin-left:-12px;
+	padding-left:1px;
+	padding-right:1px;
+	float:left;
+	cursor:pointer;
+	border:1px solid blue;
+	border-radius:10px;
+}
+.mcat_answer_choice_container {
+	display:block;
+	margin-left:45px;
+}
+
+#questions .mcat_answer_choice_container table {
+	margin:0;
+}
+
+.mcat_distractor_container {
+	color:red;
+}
+.mcat_explanation_container {
+	color:blue;
+}
+.mcat_question_text {
+	margin-left:20px;
+	margin-bottom:30px;
+}
+
+.mcat_question_text img {
+	display:block;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+.label {
+	display:block;
+	padding:2px;
+	margin-left:20px;	
+}
+#passage figure {
+	text-align:center;
+}
+#passage figcaption {
+	margin-top:20px;
+}
+
+#questions legend {
+	width:100%;
+	background-color:gray;
+	border:1px solid white;
+	color:white;
+}
+
+#questions fieldset {
+	padding-bottom:30px;
+	padding-left:0;
+	border:1px solid white;
+}
+
+#questions p {
+	margin-top:0;
+	margin-left:20px;
+}
+
+#review_table {
+	position:fixed;
+	top:150px;
+	bottom:100px;
+	left:10%;
+	width:80%;
+	overflow-y:scroll;
+	border:1px solid black;
+}
+
+#review_table table {
+	width:100%;
+	border-collapse: separate;
+	border-spacing: 0px;
+}
+
+#review_table td {
+	height: 20px;
+	border-top: 1px solid gray;
+	border-right: 1px solid gray;
+	height: 15px;
+}
+
+#review_table th {
+	font-weight: normal;
+	text-align: left;
+	border-top: 1px solid black;
+	border-right: 2px solid black;
+	background-color: #cccccc;
+}
+
+#review_table a {
+	text-decoration:none;
+	display: block;
+	color:black;
+}
+
+#review_table img {
+	border:none;
+}
+
+.tutorial_page {
+	position:fixed;
+	width: 50%; 
+	top:125px;
+	bottom:150px;
+	left:25%;
+	overflow-y:scroll;
+	border: 2px solid black; 
+	padding: 20px;
+}
+
+.tutorial_page2 {
+	position:fixed;
+	width:50%;
+	bottom:100px;
+	left:25%;
+	font-weight:bold;
+	text-align:center;
+}
