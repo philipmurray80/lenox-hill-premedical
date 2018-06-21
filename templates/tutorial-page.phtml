@@ -1,0 +1,282 @@
+<?php $bucket = getenv('LHP_FULL_LENGTH_BUCKET'); ?>
+<div id="header"><table id="header_table"><tbody><tr><td>
+                <div id="paginator">
+                    <?php echo 'Page '.($pageNumber-2).' of 10'; ?>
+                </div>
+            </td><td>
+                <div id="logo_for_full_length_header">
+                    <a style="color:white" href="/user"><i>LENOX HILL PREMEDICAL</i></a>
+                </div>
+            </td><td>
+                <div id="timer"></div>
+            </td></tr></tbody></table>
+</div>
+    <?php
+       switch ($pageNumber-2) {
+           case 1: ?>
+                <div class="tutorial_page">
+                    <p><strong>General Information:</strong></p>
+                    <p><strong>Welcome to the Tutorial</strong></p>
+                    This tutorial provides a series of screens that orient you to the
+                    computer testing environment. This will give you an opportunity to try
+                    each feature before using it in questions that will be stored. You will
+                    be instructed on how to use the mouse and the different parts of the
+                    screen. <br/><br/>You may use this tutorial for <?php echo \Model\McatSection::TUTORIAL_TIME_ALLOWED; ?> minutes.
+					Notice the time remaining box in the upper right corner of this screen. A similar display
+                    will appear during the actual exam. In the upper left corner is a box
+                    that shows where you are in the series of questions (or in this case,
+                    screens of the tutorial). Other screen features are described later in
+                    the tutorial).
+                </div>
+				<div class="tutorial_page2">Click on the "Next" button to continue.</div>
+    <?php
+               break;
+           case 2: ?>
+               <div class="tutorial_page">
+                   <p><strong>General Information:</strong></p>
+                   <p><strong>Navigating Through The Exam</strong></p>
+                   <p>You can use the mouse to move through the exam one question at a time.
+                       Buttons appear at the bottom of the screen.</p>
+                   <p><b>To move backward</b>
+                       <input type="submit" class="mcat_submit_button" value="PREVIOUS" onclick="return false;" style="display:block; float:right; margin:0;">
+                       <br/>Click the "Previous" button.
+                   </p>
+                   <p><b>To move forwards</b><br/>Click the "Next" button.
+                       <input type="submit" class="mcat_submit_button" value="NEXT" onclick="return false;" style="display:block; float:right; margin:0;">
+                   </p>
+               </div>
+			   <div class="tutorial_page2">Click on the "Next" button to continue.</div>
+    <?php
+               break;
+           case 3: ?>
+               <div class="tutorial_page">
+                   <p><strong>Multiple Choice:</strong></p>
+                   <p><strong>Selecting An Answer</strong></p>
+                   <p><img src="/public/images/tutorial_mouse_pointer.png" style="float:left; border:1px solid black; margin-right: 5px">
+                       To select an answer, point to the radio button next to the option you want to select. Then, press and quickly release the mouse
+                       button. The open circle will now be filled.</p>
+                   <p>Practice:</p>
+                   <p>Point and click on a radio button beside the correct answer (A) to select. Notice
+                       that the open circle next to the answer you chose will now be filled.</p>
+                   <p><b>Sample Question</b></p>
+                   <p><input type="radio" name="test" style="margin-left:30px;">A. Correct Answer</input></p>
+                   <p><input type="radio" name="test" style="margin-left:30px;">B. Incorrect Answer</input></p>
+               </div>
+			   <div class="tutorial_page2">Click on the "Next" button to continue.</div>
+    <?php
+               break;
+           case 4: ?>
+			   <div class="tutorial_page" style="overflow:scroll;">
+				   <div style="width:1000px;">
+					   <p><strong>Multiple Choice:</strong></p>
+					   <p><strong>Using the Scroll Function</strong></p>
+					   <p><img src="/public/images/tutorial_scroll_image.png" style="margin-right:5px; float:left;">
+						   A scroll bar appears when a question or passage does not fit on the screen. Scroll bars may
+						   be horizontal or vertical.</br></br>To scroll through the screen content, click the scroll arrow that points
+						   in the appropriate direction to move a short distance.</br></br>To move up or down more quickly, click within
+						   the scroll bar above or below the scroll box.
+					   </p>
+				   </div>
+			   </div>
+			   <div class="tutorial_page2">Click on the "Next" button to continue.</div>
+    <?php
+               break;
+           case 5: ?>
+			   <div class="tutorial_page">
+				   <div>
+					   <p><strong>Multiple Choice:</strong></p>
+					   <p><strong>Highlighting Passages</strong></p>
+					   <p>During all four sections of the actual MCAT, as well as on this practice test, you will be able to highlight text in the passage area. This will allow you to mark parts of the reading passage that you may feel are important to refer back to as you respond to the questions.
+					   </p>
+					   <p>To highlight a section of a passage:
+					   <ol>
+						   <li>
+							   Click and drag a selection of text you wish to highlight.
+						   </li>
+						   <li>
+							   Click on the highlight icon that appears.<img src="<?php echo $bucket; ?>highlight.png">
+						   </li>
+					   </ol>
+					   </p>
+					   <p>To remove a highlight from a section of a passage:
+					   <ol>
+						   <li>Click on the highlighted section.</li>
+					   </ol>
+					   </p>
+				   </div>
+			   </div>
+			   <div class="tutorial_page2">Click on the "Next" button to continue.</div>
+    <?php
+               break;
+           case 6: ?>
+               <div class="tutorial_page">
+                   <p><strong>Multiple Choice:</strong></p>
+                   <p><strong>Viewing the Periodic Table</strong></p>
+                   <p>During the Chemical and Physical Foundations of Biological Systems section and the Biological and Biochemical
+                       Foundations of Living Systems section, you will have a periodic table of the elements available to
+                       answer the questions. Since you may or may not need the periodic table to answer the question,
+                       it will not automatically appear on the screen with the question. Rather, you will use the mouse
+                       to click on the "Periodic Table" button above the question to see the table.</p>
+                   <ol>
+                       <li>Click the "Periodic Table" button below.</li>
+                       <li>When you have finished viewing the table, click "Close Window" to return to the question.</li>
+                   </ol>
+                   <p style="line-height:3em;">
+                       <input type="submit" class="mcat_submit_button" onclick="getPeriodicTable('<?php echo $bucket; ?>periodic_table.png'); return false;" value="PERIODIC TABLE" style="float:none;width:160px;">
+                   </p>
+               </div>
+			   <div class="tutorial_page2">Click on the "Next" button to continue.</div>
+    <?php
+               break;
+           case 7: ?>
+               <div class="tutorial_page">
+                   <p><strong>Multiple Choice:</strong></p>
+                   <p><strong>Striking Out Responses</strong></p>
+                   <p>As you try to determine the single best answer to the multiple choice questions, a Strike Out feature is
+                       available to help you visually eliminate answer choices from consideration.</p>
+					<p style="color:red">When you take the actual MCAT, the strikeout feature will be implemented with a <i>right click</i> rather
+                   than a left click. Due to the fact that some computers do not have right clicking capabilities, your Lenox Hill Premedical
+                   practice MCATs implement this feature with a left click.</p>
+                   <p>By clicking on the text of the
+                       answer choice or, in the event answers are symbols, by clicking on the symbol, you will strike out the answer choice. You may strike out as many answer choices as you wish, or none at all. If you make a mistake, you may also undo your
+                       strikethrough by clicking on the answer choice a second time.</p>
+                   <p>Practice on the sample questions by doing the following:</p>
+                   <ol>
+                       <li>Move the pointer over one of the answer choices and left-click. A line should be drawn through this
+                           answer choice's text as well.</li>
+                       <li>Move the pointer over a different answer choice and left-click. A line should be drawn through this
+                           answer choice's text as well.</li>
+                       <li>Move the pointer over one of the answer choices that is struck out. Click on the text. The line
+                           should be removed.</li>
+                   </ol>
+                   <p><b>Sample Questions</b></p>
+
+                   <div style="width:100%;">
+                       <div style="width:200px; margin-left:50px; float:left;">
+                           <p style="margin:0;">1. What is the color of the sky?</p>
+                           <p><input type="radio" name="color">A. </input><span onclick="if (isStrikedOut(this)) {unStrikeOut(this);} else {strikeOut(this);}">Purple</span></p>
+                           <p><input type="radio" name="color">B. </input><span onclick="if (isStrikedOut(this)) {unStrikeOut(this);} else {strikeOut(this);}">Yellow</span></p>
+                           <p><input type="radio" name="color">C. </input><span onclick="if (isStrikedOut(this)) {unStrikeOut(this);} else {strikeOut(this);}">Pink</span></p>
+                           <p><input type="radio" name="color">D. </input><span onclick="if (isStrikedOut(this)) {unStrikeOut(this);} else {strikeOut(this);}">Blue</span></p>
+                       </div>
+                       <div style="width:200px; margin-left:300px;">
+                           <p>2. What shape is a circle?</p>
+                           <p><span class="mcat_answer_bubble_and_letter"><input type="radio" name="shape">A. </input></span><span onclick="if (isStrikedOut(this)) {unStrikeOut(this);} else {strikeOut(this);}"><img src="/public/images/tutorial_circle.png"></span></p>
+                           <p><span class="mcat_answer_bubble_and_letter"><input type="radio" name="shape">B. </input></span><span onclick="if (isStrikedOut(this)) {unStrikeOut(this);} else {strikeOut(this);}"><img src="/public/images/tutorial_rectangle.png"></span></p>
+                           <p><span class="mcat_answer_bubble_and_letter"><input type="radio" name="shape">C. </input></span><span onclick="if (isStrikedOut(this)) {unStrikeOut(this);} else {strikeOut(this);}"><img src="/public/images/tutorial_square.png"></span></p>
+                           <p><span class="mcat_answer_bubble_and_letter"><input type="radio" name="shape">D. </input></span><span onclick="if (isStrikedOut(this)) {unStrikeOut(this);} else {strikeOut(this);}"><img src="/public/images/tutorial_triangle.png"></span></p>
+                       </div>
+                   </div>
+               </div>
+			   <div class="tutorial_page2">Click on the "Next" button to continue.</div>
+    <?php
+               break;
+           case 8: ?>
+               <div class="tutorial_page">
+                   <p><strong>Multiple Choice:</strong></p>
+                   <p><strong>Marking Questions for Later Review</strong></p>
+                   <p>Your score is determined by the number of questions you answer correctly. Therefore it is
+                       to your advantage to answer every question. If you are unsure of your answer, you can mark
+                       the question to review if time permits.</p>
+                   <p><b>To mark a question</b>
+                       <input type="submit" class="mcat_submit_button" value="MARK" style="float:right;" onclick="return false;">
+                       <br/>Click the "Mark" button.</p>
+                   <p><b>To unmark a question</b>
+                       <input type="submit" class="mcat_submit_button" value="MARKED" style="float:right;background-color:pink" onclick="return false;">
+                       <br/>Click the "Mark" button. This button will only appear if you have marked the question.</p>
+                   <p>Unmark each question when you are satisfied with your answer choice. If you forget to unmark the question, it is OK.
+                       The scoring process does not differentiate between marked and unmarked questions.</p>
+                   <p>You can also leave a question unanswered (incomplete). Marked and incomplete questions will be highlighted in a
+                       Review Questions screen before you exit each section of the exam and you will have the opportunity to go back to
+                       those if you have time remaining.</p>
+                   <p><input type="submit" class="mcat_submit_button" value="REVIEW" style="float:right;" onclick="return false;">
+                       At any time during the multiple choice sections of the examination, you may click on the "Review" button to see a
+                       scrollable listing of all the question numbers. This list displays each question number and indicates if this
+                       question has been marked for review, completed or skipped.</p>
+               </div>
+			   <div class="tutorial_page2">Click on the "Next" button to continue.</div>
+    <?php
+               break;
+           case 9: ?>
+               <div class="tutorial_page">
+                   <p><strong>Multiple Choice:</strong></p>
+                   <p><strong>Reviewing Questions</strong></p>
+				   <div id="review_table" style="position:static;margin:auto;">
+					   <table>
+						   <thead><tr><th>Questions</th><th>Marked</th><th>Incomplete</th><th>Completed</th></thead>
+						   <tbody>
+						   <tr><td><img src="/public/images/completed_question.png">Question 1</td><td></td><td></td><td>Yes</td></tr>
+						   <tr><td><img src="/public/images/completed_question.png">Question 2</td><td></td><td></td><td>Yes</td></tr>
+						   <tr><td><img src="/public/images/marked_question.png">Question 3</td><td>Yes</td><td>Yes</td><td></td></tr>
+						   <tr><td><img src="/public/images/marked_question.png">Question 4</td><td>Yes</td><td></td><td></td></tr>
+						   <tr><td><img src="/public/images/incomplete_question.png">Question 5</td><td></td><td>Yes</td><td></td></tr>
+						   <tr><td><img src="/public/images/incomplete_question.png">Question 6</td><td></td><td>Yes</td><td></td></tr>
+						   </tbody>
+					   </table>
+				   </div>
+                   <p style="text-align:center">Symbols Key</p>
+                   <p style="text-align:center">
+                       <img src="/public/images/marked_question.png"> = Marked question &nbsp;
+                       <img src="/public/images/incomplete_question.png"> = Incomplete question &nbsp;
+                       <img src="/public/images/completed_question.png"> = Completed question</p>
+                   <p><input type="submit" class="mcat_submit_button" value="REVIEW" style="float:right;" onclick="return false;">
+                       At any point during the examination, you may click on the "Review" button to see a scrollable listing of all the question numbers.
+                       The list displays each question number and indicates if the question has been marked for review, incomplete or completed.</p>
+                   <p><b>To review questions</b>
+                       <input type="submit" class="mcat_submit_button" value="REVIEW ALL" style="float:right;" onclick="return false;">
+                       <br/>Click on the "Review All" button. You will be moved to the first question. Clicking on the "Next" button will
+                       cause you to move to the next page. You can also click on the question number in the list to move to a particular
+                       question.</p>
+                   <p><b>To review marked questions</b>
+                       <input type="submit" class="mcat_submit_button" value="REVIEW MARKED" style="float:right;" onclick="return false;">
+                       <br/>Click on the "Review Marked" button. You will be moved to the first marked question. Clicking on the "Next" button
+                       will cause you to move to the next page with a marked question.</p>
+                   <p><b>To review incomplete questions</b>
+                       <input type="submit" class="mcat_submit_button" value="REVIEW INCOMPLETE" style="float:right;width:160px;" onclick="return false;">
+                       <br/>Click on the "Review Incomplete" button. You will be moved to the first incomplete question. Clicking on the "Next"
+                       button will cause you to move to the next page with an incomplete question.</p>
+               </div>
+			   <div class="tutorial_page2">Click on the "Next" button to continue.</div>
+    <?php
+               break;
+           case 10: ?>
+               <div class="tutorial_page">
+                   <p><strong>End of Tutorial:</strong></p>
+                   <p>This concludes the tutorial. If you have time remaining, you can repeat the tutorial by clicking on the "Previous" button to
+                       back up one screen at a time.</p>
+                   <p>Good luck with the examination.</p>
+               </div>
+			   <div class="tutorial_page2">Click on the "End Tutorial" button to continue.</div>
+    <?php
+               break;
+       }
+    ?>
+<div id="footer">
+    <table id="footer_table">
+        <tbody>
+        <tr>
+            <td>
+                <div id="footer_left">
+                    <form action="/full-length/tutorial-page/<?php echo $examId.'/'.$fullLengthNumber.'/'.$pageNumber; ?>" method="post">
+                        <?php if (!$isFirstPage) {; ?>
+                            <input class="mcat_submit_button" type="submit" name="previous" value="PREVIOUS">
+                        <?php }; ?>
+                </div>
+            </td>
+            <td>
+                <div id="footer_center">
+                    <input type="hidden" name="timeRemaining" value="<?php echo $timeRemaining; ?>">
+                </div>
+            </td>
+            <td>
+                <div id="footer_right">
+                    <?php if (!$isLastPage) {; ?>
+                        <input class="mcat_submit_button" type="submit" name="next" value="NEXT">
+                    <?php }; ?>
+					<input class="mcat_submit_button" type="submit" name="end" value="END TUTORIAL">
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table></form>
+</div>

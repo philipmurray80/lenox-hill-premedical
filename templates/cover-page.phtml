@@ -1,0 +1,31 @@
+<div id="header"><table id="header_table"><tbody><tr><td>
+                <div id="paginator">
+                    <?php if (isset($paginationArray)) {
+                        echo 'Questions ' . $paginationArray['min'] . '-' . $paginationArray['max'] . ' of ' . $paginationArray['total'];
+                    } ?>
+                </div>
+            </td><td>
+                <div id="logo_for_full_length_header">
+                    <a style="color:white" href="/user"><i>LENOX HILL PREMEDICAL</i></a>
+                </div>
+            </td><td>
+                <div id="timer"></div>
+            </td></tr></tbody></table>
+</div>
+
+<div style="position:fixed;top:20%;bottom:30%;width:50%;left:25%">
+        <span style="display:block;height:10%;font-size:1.2em;color:blue;text-align:center;padding-bottom:2%;">
+			<strong>FULL-LENGTH MCAT<sup>&reg;</sup> <?php echo $fullLengthNumber; ?></strong>
+		</span>
+		<span style="display:block;padding-top:10%;padding-bottom:10%;border:2px solid black;text-align:center;font-size:1.5em">
+			<?php echo $firstName.' '.$lastName; ?>
+		</span>
+</div>  
+<div class="tutorial_page2">Click the "Next" button to continue with the test.</div>
+
+
+<div id="footer">
+    <form action="/full-length/cover-page/<?php echo $examId.'/'.$fullLengthNumber.'/'.$pageNumber; ?>" method="post">
+    <input class="mcat_submit_button" type="submit" name="next" value="NEXT">
+    </form>
+</div>

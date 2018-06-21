@@ -1,0 +1,52 @@
+<script type="text/javascript">
+    function voidAlert() {
+        if (document.getElementById('void').checked) {
+            var answer = confirm('By clicking OK, you will permanently and irretrievably delete the answer choices of the MCAT exam you just took. Are you sure you would like to do this?');
+            if (answer == true) {return true} else {return false}
+        }
+    }
+</script>
+<div id="header"><table id="header_table"><tbody><tr><td>
+                <div id="paginator">
+                    <?php if (isset($paginationArray)) {
+                        echo 'Questions ' . $paginationArray['min'] . '-' . $paginationArray['max'] . ' of ' . $paginationArray['total'];
+                    } ?>
+                </div>
+            </td><td>
+                <div id="logo_for_full_length_header">
+                    <a style="color:white" href="/user"><i>LENOX HILL PREMEDICAL</i></a>
+                </div>
+            </td><td>
+                <div id="timer"></div>
+            </td></tr></tbody></table>
+</div>
+<div style="position:fixed;top:10%;bottom:30%;width:50%;left:25%;overflow-y:scroll;border:1px solid black;padding:10px;">
+	<h3 style="height:10%;text-align:center;">
+		Congratulations! You have completed the MCAT
+	</h3>
+	<span style="display:block;">
+		<b>Scoring or voiding your exam</b><br/><br/>You have five (5) minutes to make a selection.<br/>
+		<ul>
+			<li>If you would like to have your MCAT exam SCORED, please select <b>"I wish to have
+					my MCAT exam <span style="text-decoration:underline">SCORED</span>"</b> below and click "NEXT". Note, if you choose this option,
+				your results will be reported and you will be unable to cancel your scores at a later date.</li>
+			<li>If you would like to VOID your MCAT exam and not have it scored, please select, <b>"I wish to
+					VOID my MCAT exam"</b> below and click "NEXT". Note, if you choose this option, you will be unable
+				to have your exam scored at a later date and you are not eligible for a refund of your registration fee.</li>
+			<li>If you make a selection below, but do not hit the "NEXT" button, the selection you indicated will take
+				effect when five (5) minutes have expired.</li>
+		</ul>
+	</span>
+    <div style="display:block;">
+        <form action="/full-length/void-page/<?php echo $examId.'/'.$fullLengthNumber.'/'.$pageNumber; ?>" method="post" onsubmit="return voidAlert();">
+            <input type="radio" name="void" value="SCORE" checked="checked" style="padding:10px;">I wish to have my MCAT exam <span style="text-decoration: underline">SCORED</span><br/>
+            <input type="radio" id="void" name="void" value="VOID" style="padding:10px;">I wish to <span style="text-decoration: underline">VOID</span> by MCAT exam.
+    </div>
+</div>
+<div class="tutorial_page2">
+        Please carefully make your selection. You cannot return to this screen after you have chosen "NEXT" or time expires.
+</div>
+<div id="footer">
+    <input class="mcat_submit_button" type="submit" name="next" value="NEXT">
+    <input type="hidden" name="timeRemaining" value="<?php echo $timeRemaining; ?>">
+</div>

@@ -1,0 +1,46 @@
+<div class="row">
+    <div class="col-sm-6 col-md-4 col-md-offset-4">
+        <div class="text-success"><?php echo $flash['message']; ?></div>
+        <h4 class="text-info text-center">MCAT<sup>&reg;</sup> TUTORING INVOICE</h4>
+        <table class="table">
+            <tbody>
+                <tr><td>DATE</td><td><?php echo $date; ?></td></tr>
+				<tr><td>STUDENT</td><td><?php echo $tutoree; ?></td></tr>
+                <tr><td>TUTOR</td><td><?php echo $tutor; ?></td></tr>
+                <tr><td>START TIME</td><td><?php echo $startTime; ?></td></tr>
+                <tr><td>END TIME</td><td><?php echo $endTime; ?></td></tr>
+                <tr><td>BILLABLE HOURS</td><td><?php echo $billableHours; ?></td></tr>
+				<tr><td>RATE</td><td>$<?php echo $hourlyRate; ?>/hour</td></tr>
+                <tr><td>AMOUNT DUE</td>
+                    <td class="text-success">$<?php if ($status == 'unpaid') {echo $balanceInDollars;} else {echo '0.00';} ?></td>
+                </tr>
+            </tbody>
+        </table>
+        <?php if ($status == 'unpaid') {?>
+            <form action="/tutoring-invoice?token=<?php echo $invoiceKey;?>" method="post" name="stripeTutoringInvoice">
+                <div class="text-center">
+                    <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                            data-name="Lenox Hill Premedical"
+                            data-image="public/images/apple-touch-icon-144x144.png"
+                            data-key="<?php echo $stripePublishableKey; ?>"
+                            data-amount="<?php echo $balanceInCents; ?>"
+                            data-description="MCAT Tutoring"
+                            data-label="Pay $<?php echo $balanceInDollars; ?>"
+                            data-allowRememberMe="false">
+                    </script>
+                </div><br/>
+                <div class="text-center">Click to submit a one-time payment of $<?php echo $balanceInDollars;?>. In the email field,
+                    please write the email address where you would like the receipt to be sent.</div>
+            </form><br/><br/>
+            <h6 class="text-muted">NOTE: All payments to Lenox Hill Premedical are made on a one-time basis via a secure, licensed,
+                third-party payment gateway (Stripe<sup>&trade;</sup> Inc.). Your payment information is
+                SSL-encrypted and never stored on any server. Your information is secure!
+            </h6>
+        <?php } else {?>
+            <div class="text-center">
+                <h1 class="text-success"><span style="border:1px solid green;padding-left:3px;padding-right:3px">PAID</span></span></h1>
+            </div>
+        <?php } ?>
+    </div>
+</div>
+<br/><br/><br/><br/><br/><br/>

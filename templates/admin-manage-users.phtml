@@ -1,0 +1,135 @@
+<script type="text/javascript">
+    $(".alert").alert();
+    function buildDeleteWarning(id,page) {
+        var newDiv = $("<div class='alert alert-danger'/>"),
+            cancelButton = $("<button type='button' class='btn close' data-dismiss='alert' aria-hidden='true'>Cancel</button>"),
+            deleteMcatTag = $("<a>").attr("href", "/admin/delete-user?userToBeDeleted=" + id + "&page=" + page).attr("class", "btn btn-danger"),
+            message = $("<p>This will permanently and irretrievably delete all information, including exams for this user (User ID: "+id+"). Are you sure you would like to do this?</p>");
+        deleteMcatTag.append("DELETE USER");
+        newDiv.append(cancelButton).append(message).append(deleteMcatTag);
+        $("#mcat_message").append(newDiv);
+    }
+</script>
+<div id="mcat_message"></div>
+<div class="text-danger"><?php echo $flash['message']; ?></div>
+<nav>
+    <ul class="pagination pagination-sm">
+        <li class="previous <?php echo ($page == 1) ? 'disabled' : ''; ?>">
+            <a href="/admin/manage-users?page=<?php echo ($page == 1) ? 1 : $page-1; ?>"><span aria-hidden="true">&larr;</span> Prev</a>
+        </li>
+            <?php for ($i=1;$i<=$lastPage;$i++) {?>
+                <li <?php if ($page == $i) {?>class="active"<?php } ?>><a href="/admin/manage-users?page=<?php echo $i;?>"><?php echo $i; ?></a></li>
+            <?php } ?>
+        <li class="next <?php echo ($page == $lastPage) ? 'disabled' : ''; ?>">
+            <a href="/admin/manage-users?page=<?php echo ($page == $lastPage) ? $lastPage : $page+1; ?>">Next <span aria-hidden="true">&rarr;</span></a>
+        </li>
+    </ul>
+</nav>
+<div class="panel-group" id="accordion">
+    <?php foreach ($users as $user) { ?>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+			<h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapse<?php echo $user['spelling'];?>">
+                    <small class=<?php if ($user['role'] == 'admin') {?>"text-danger"<?php }
+                        elseif ($user['role'] == 'writer') {?>"text-success"<?php }
+                        else {?>"text-info"<?php }?>>
+                    <?php echo $user['last_name'].', '.$user['first_name'].' ('.$user['user_id'].')'; ?></small>
+                </a>&nbsp;&nbsp;
+                    <small class=<?php if ($user['role'] == 'admin') {?>"text-danger"<?php }
+                        elseif ($user['role'] == 'writer') {?>"text-success"<?php }
+                        else {?>"text-info"<?php }?>>
+					<strong>Email:</strong> <?php echo $user['email']; ?>&nbsp;&nbsp;
+					<strong>Creation Date:</strong> <?php echo $user['account_creation_date']->format('F jS\, Y \a\t g:ia T'); ?>
+					</small>
+                <div style="display:inline;float:right">
+					<?php if ($isPhil) { ?>
+						<a href="/admin/manage-admins?page=<?php echo $page; ?>&id=<?php echo $user['user_id']; ?>&role=admin" class="btn btn-warning btn-xs">Admin</a>
+						<a href="/admin/manage-admins?page=<?php echo $page; ?>&id=<?php echo $user['user_id']; ?>&role=writer" class="btn btn-default btn-xs">Writer</a>
+						<a href="/admin/manage-admins?page=<?php echo $page; ?>&id=<?php echo $user['user_id']; ?>&role=student" class="btn btn-info btn-xs">Student</a>
+                    <?php } ?>
+                    <button id="<?php echo $user['user_id'];?>" class="btn btn-danger btn-xs" onclick="buildDeleteWarning(this.id,<?php echo $page;?>)">Delete</button>
+                </div>
+            </h4>
+        </div>
+        <div id="collapse<?php echo $user['spelling'];?>" class="panel-collapse collapse">
+            <div class="panel-body">
+                <form role="form" action="/admin/update-user?page=<?php echo $page;?>" method="post">
+                    <input type="hidden" name="userId" value="<?php echo $user['user_id'];?>">
+                    <div class="form-group">
+                        <label for="firstName">First Name:</label>
+                        <input type="text" class="form-control" name="firstName" id="firstName" value="<?php echo $user['first_name'];?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name:</label>
+                        <input type="text" class="form-control" name="lastName" id="lastName" value="<?php echo $user['last_name'];?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" class="form-control" name="email" id="email" value="<?php echo $user['email']; ?>">
+                    </div>
+					<div class="form-group">
+                        <label for="promoCode">Promo Code:</label>
+                        <input type="text" class="form-control" name="promoCode" id="promoCode" value="<?php echo $user['promo_code']; ?>">
+					</div>
+					<div class="form-group">
+						<label for="promoCodeDiscount">Promo Code Discount:</label>
+                        <input type="text" class="form-control" name="promoCodeDiscount" id="promoCodeDiscount" value="<?php echo $user['promo_code_discount']; ?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="fullLength1">Full-Length 1:
+                            <?php if ($user['FL1ExpDate'] > $now) {?>
+                                <small class="text-success">Active until <?php echo $user['FL1ExpDate']->format('F jS\, Y \a\t g:ia T');?></small>
+                            <?php } else { ?>
+                                <small class="text-danger">Inactive (Expired on <?php echo $user['FL1ExpDate']->format('F jS\, Y \a\t g:ia T');?>)</small>
+                            <?php } ?>
+                        </label>
+                        <input type="text" class="form-control" name="fullLength1" id="fullLength1" value="<?php echo $user['FL1ExpDate']->format('Y-m-d H:i');?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="fullLength2">Full-Length 2:
+                            <?php if ($user['FL2ExpDate'] > $now) {?>
+                                <small class="text-success">Active until <?php echo $user['FL2ExpDate']->format('F jS\, Y \a\t g:ia T');?></small>
+                            <?php } else { ?>
+                                <small class="text-danger">Inactive (Expired on <?php echo $user['FL2ExpDate']->format('F jS\, Y \a\t g:ia T');?>)</small>
+                            <?php } ?>
+                        </label>
+                        <input type="text" class="form-control" name="fullLength2" id="fullLength2" value="<?php echo $user['FL2ExpDate']->format('Y-m-d H:i');?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="fullLength3">Full-Length 3:
+                            <?php if ($user['FL3ExpDate'] > $now) {?>
+                                <small class="text-success">Active until <?php echo $user['FL3ExpDate']->format('F jS\, Y \a\t g:ia T');?></small>
+                            <?php } else { ?>
+                                <small class="text-danger">Inactive (Expired on <?php echo $user['FL3ExpDate']->format('F jS\, Y \a\t g:ia T');?>)</small>
+                            <?php } ?>
+                        </label>
+                        <input type="text" class="form-control" name="fullLength3" id="fullLength3" value="<?php echo $user['FL3ExpDate']->format('Y-m-d H:i');?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="fullLength4">Full-Length 4:
+                            <?php if ($user['FL4ExpDate'] > $now) {?>
+                                <small class="text-success">Active until <?php echo $user['FL4ExpDate']->format('F jS\, Y \a\t g:ia T');?></small>
+                            <?php } else { ?>
+                                <small class="text-danger">Inactive (Expired on <?php echo $user['FL4ExpDate']->format('F jS\, Y \a\t g:ia T');?>)</small>
+                            <?php } ?>
+                        </label>
+                        <input type="text" class="form-control" name="fullLength4" id="fullLength4" value="<?php echo $user['FL4ExpDate']->format('Y-m-d H:i');?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="fullLength5">Full-Length 5:
+                            <?php if ($user['FL5ExpDate'] > $now) {?>
+                                <small class="text-success">Active until <?php echo $user['FL5ExpDate']->format('F jS\, Y \a\t g:ia T');?></small>
+                            <?php } else { ?>
+                                <small class="text-danger">Inactive (Expired on <?php echo $user['FL5ExpDate']->format('F jS\, Y \a\t g:ia T');?>)</small>
+                            <?php } ?>
+                        </label>
+                        <input type="text" class="form-control" name="fullLength5" id="fullLength5" value="<?php echo $user['FL5ExpDate']->format('Y-m-d H:i');?>">
+                    </div>
+                    <button type="submit" class="btn btn-info">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <?php } ?>
+</div>

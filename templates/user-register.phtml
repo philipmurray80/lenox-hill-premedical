@@ -1,0 +1,53 @@
+<form action="/user/register" method="post" class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-2 control-label" for="firstname">First Name</label>
+        <div class="col-sm-6">
+            <input name="firstname" type="text" class="form-control" value="<?php if (isset($flash['firstName'])) {echo $flash['firstName'];}?>">
+            <?php if (isset($flash['firstNameError'])) {
+                echo '<ul class="text-danger"><li>' . $flash['firstNameError'] . '</li></ul>';
+            } ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label" for="lastname">Last Name</label>
+        <div class="col-sm-6">
+            <input name="lastname" type="text" class="form-control" value="<?php if (isset($flash['lastName'])) {echo $flash['lastName'];}?>">
+            <?php if (isset($flash['lastNameError'])) {
+                echo '<ul class="text-danger"><li>' . $flash['lastNameError'] . '</li></ul>';
+            } ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label" for="email">Email</label>
+        <div class="col-sm-6">
+            <input name="email" type="text" class="form-control" value="<?php if (isset($flash['email'])) {echo $flash['email'];}?>">
+            <?php if (isset($flash['emailError'])) {
+                echo '<ul class="text-danger"><li>' . $flash['emailError'] . '</li></ul>';
+            } ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label" for="password">Password</label>
+        <div class="col-sm-6">
+            <input name="password" type="password" class="form-control" value="<?php if (isset($flash['password'])) {echo $flash['password'];}?>">
+            <?php if (isset($flash['passwordError'])) {
+                echo '<ul class="text-danger"><li>' . $flash['passwordError'] . '</li></ul>';
+            } ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label" for="passwordVerify">Password Verify</label>
+        <div class="col-sm-6">
+            <input name="passwordVerify" type="password" class="form-control" value="<?php if (isset($flash['passwordVerify'])) {echo $flash['passwordVerify'];}?>">
+            <?php if (isset($flash['passwordVerifyError'])) {
+                echo '<ul class="text-danger"><li>' . $flash['passwordVerifyError'] . '</li></ul>';
+            } ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-6">
+            <button type="submit" name="submit" class="btn btn-success" value="">BEGIN MCAT<sup>&reg;</sup></button>
+        </div>
+    </div>
+</form>
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
