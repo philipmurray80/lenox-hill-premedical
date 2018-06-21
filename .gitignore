@@ -1,3 +1,10 @@
 stripe-php-3.4.0/
 Slim/
 app.yaml
+public/css/bootstrap*
+public/images/
+js/*
+!js/mark.js
+!js/mark1.js
+!js/timer.js
+public/robots.txt
