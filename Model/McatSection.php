@@ -3,8 +3,8 @@ namespace Model;
 
 class McatSection
 {
-	const ANONYMOUS_STUDENT_ID = 89;
-	
+    const ANONYMOUS_STUDENT_ID = 89;
+    
     const BIO_SECTION_NAME = 'Biological and Biochemical Foundations of Living Systems';
     const PHYS_SECTION_NAME = 'Chemical and Physical Foundations of Biological Systems';
     const PSY_SECTION_NAME = 'Psychological, Social, and Biological Foundations of Behavior';
@@ -35,7 +35,8 @@ class McatSection
 
 
 
-    public function __construct($section) {
+    public function __construct($section)
+    {
         switch ($section) {
             case 'bio':
                 $this->sectionName = McatSection::BIO_SECTION_NAME;
@@ -60,7 +61,8 @@ class McatSection
         }
     }
 
-    public static function getNumberOfItems($section) {
+    public static function getNumberOfItems($section)
+    {
         switch ($section) {
             case 'bio':
                 return self::BIO_NUMBER_ITEMS;
@@ -77,7 +79,8 @@ class McatSection
         }
     }
 
-    public static function getSectionTime($type, $section) {
+    public static function getSectionTime($type, $section)
+    {
         $typeArray = array(
             'cover' => McatSection::COVER_PAGE_TIME_ALLOWED,
             'tutorial' => McatSection::TUTORIAL_TIME_ALLOWED,

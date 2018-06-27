@@ -4,6 +4,7 @@ namespace Controller;
 use Slim\Slim;
 use Model\McatSection;
 use Model\McatItem;
+
 //use google\appengine\api\cloud_storage\CloudStorageTools;
 
 
@@ -32,16 +33,19 @@ class ProctorController
         'review-review-page' => 'reviewReviewPageAction'
     );
 
-    public function dispatchAction($pageType) {
+    public function dispatchAction($pageType)
+    {
         $method = $this->pageTypes[$pageType];
         return $this->$method();
     }
 
-    public function setApp(Slim $app) {
+    public function setApp(Slim $app)
+    {
         $this->app = $app;
     }
 
-    public function coverPageAction() {
+    public function coverPageAction()
+    {
         if ($this->app->request->isPost()) {
             $post = $this->app->request->post();
             $newPageArray = $this->getNewPageArray($post);
@@ -58,7 +62,8 @@ class ProctorController
         $stmt->execute(array(':userId' => $_SESSION['user_id']));
         $user = $stmt->fetch(\PDO::FETCH_OBJ);
 
-        $this->app->render('cover-page.phtml',
+        $this->app->render(
+            'cover-page.phtml',
             array(
                 'firstName' => $user->first_name,
                 'lastName' => $user->last_name,
@@ -69,7 +74,8 @@ class ProctorController
         );
     }
 
-    public function tutorialPageAction() {
+    public function tutorialPageAction()
+    {
         if ($this->app->request->isPost()) {
             $post = $this->app->request->post();
             $newPageArray = $this->getNewPageArray($post);
@@ -85,7 +91,8 @@ class ProctorController
         //Is user on first or last page of tutorial? These are hard-coded page numbers!
         $isFirstPage = ($this->pageNumber == 3) ? true : false;
         $isLastPage = ($this->pageNumber == 12) ? true : false;
-        $this->app->render('tutorial-page.phtml',
+        $this->app->render(
+            'tutorial-page.phtml',
             array(
                 'isFirstPage' => $isFirstPage,
                 'isLastPage' => $isLastPage,
@@ -97,7 +104,8 @@ class ProctorController
         );
     }
 
-    public function warningPageAction() {
+    public function warningPageAction()
+    {
         if ($this->app->request->isPost()) {
             $post = $this->app->request->post();
             $newPageArray = $this->getNewPageArray($post);
@@ -110,7 +118,8 @@ class ProctorController
 
         $timeRemaining = $this->getTimeRemaining();
 
-        $this->app->render('warning-page.phtml',
+        $this->app->render(
+            'warning-page.phtml',
             array(
                 'timeRemaining' => $timeRemaining,
                 'examId' => $this->examId,
@@ -120,7 +129,8 @@ class ProctorController
         );
     }
 
-    public function examineeAgreementPageAction() {
+    public function examineeAgreementPageAction()
+    {
         if ($this->app->request->isPost()) {
             $post = $this->app->request->post();
             $newPageArray = $this->getNewPageArray($post);
@@ -133,7 +143,8 @@ class ProctorController
 
         $timeRemaining = $this->getTimeRemaining();
 
-        $this->app->render('examinee-agreement-page.phtml',
+        $this->app->render(
+            'examinee-agreement-page.phtml',
             array(
                 'timeRemaining' => $timeRemaining,
                 'examId' => $this->examId,
@@ -143,7 +154,8 @@ class ProctorController
         );
     }
 
-    public function directionsPageAction() {
+    public function directionsPageAction()
+    {
         if ($this->app->request->isPost()) {
             $post = $this->app->request->post();
             $newPageArray = $this->getNewPageArray($post);
@@ -164,7 +176,8 @@ class ProctorController
         $section = $result['Section'];
         $section = new McatSection($section);
 
-        $this->app->render('directions-page.phtml',
+        $this->app->render(
+            'directions-page.phtml',
             array(
                 'timeRemaining' => $timeRemaining,
                 'section' => $section,
@@ -173,10 +186,10 @@ class ProctorController
                 'pageNumber' => $this->pageNumber,
             )
         );
-
     }
 
-    public function contentPageAction() {
+    public function contentPageAction()
+    {
         if ($this->app->request->isPost()) {
             $post = $this->app->request->post();
             $answers = array();
@@ -197,7 +210,7 @@ class ProctorController
                 $this->saveAnswers($answers);
             }
 
-			//save annotations
+            //save annotations
             if ($post['annotationChanged'] == 'TRUE') {//they highlighted (or unhighlighted) something
                 $this->saveAnnotation($post['annotation'], $post['annotationCount']);
             }
@@ -205,13 +218,13 @@ class ProctorController
             $newPageArray = $this->getNewPageArray($post);
             $timeRemaining = (!$newPageArray['IsNewSection']) ? $post['timeRemaining'] : McatSection::getSectionTime($newPageArray['PageType'], $newPageArray['Section']);
             $this->updateExamState($timeRemaining, $newPageArray['PageNumber']);
-			$redirectString = '/full-length/' . $newPageArray['PageType'] . '-page/' . $this->examId . '/';
+            $redirectString = '/full-length/' . $newPageArray['PageType'] . '-page/' . $this->examId . '/';
             $redirectString .= $this->fullLengthNumber . '/' . $newPageArray['PageNumber'] . (isset($post['previous']) ? '?p' : '');
             $this->app->redirect($redirectString);
         }
 
         $firstPage = $this->findFirstPageOfSection();
-		$previous = (isset($_GET['p'])) ? true : false;
+        $previous = (isset($_GET['p'])) ? true : false;
         $timeRemaining = $this->getTimeRemaining();
         $x = $this->retrieveAnnotations();
         $annotationCount = $x['AnnotationCount'];
@@ -219,13 +232,14 @@ class ProctorController
         $items = $this->retrieveItems();
         $paginationArray = $this->getContentPaginationArray();
 
-        $this->app->render('content-page.phtml',
+        $this->app->render(
+            'content-page.phtml',
             array(
                 'items' => $items,
                 'currentSection' => $firstPage['Section'],
-				'previous' => $previous,
+                'previous' => $previous,
                 'passage' => $passage,
-				'annotationCount' => $annotationCount,
+                'annotationCount' => $annotationCount,
                 'timeRemaining' => $timeRemaining,
                 'paginationArray' => $paginationArray,
                 'examId' => $this->examId,
@@ -235,16 +249,17 @@ class ProctorController
         );
     }
 
-    public function reviewPageAction() {
+    public function reviewPageAction()
+    {
         if ($this->app->request->isPost()) {
             $post = $this->app->request->post();
             $newPageArray = $this->getNewPageArray($post);
             $timeRemaining = (!$newPageArray['IsNewSection']) ? $post['timeRemaining'] : McatSection::getSectionTime($newPageArray['PageType'], $newPageArray['Section']);
             $this->updateExamState($timeRemaining, $newPageArray['PageNumber']);
-			$redirectString = '/full-length/' . $newPageArray['PageType'] . '-page/' . $this->examId . '/';
+            $redirectString = '/full-length/' . $newPageArray['PageType'] . '-page/' . $this->examId . '/';
             $redirectString .= $this->fullLengthNumber . '/' . $newPageArray['PageNumber'] . (isset($post['previous']) ? '?p' : '');
-			$redirectString .= (isset($_GET['q']) ? '?q='.$_GET['q'] : '');
-			$redirectString .= (isset($newPageArray['ItemNumber']) ? '?q=' . $newPageArray['ItemNumber'] : '');
+            $redirectString .= (isset($_GET['q']) ? '?q='.$_GET['q'] : '');
+            $redirectString .= (isset($newPageArray['ItemNumber']) ? '?q=' . $newPageArray['ItemNumber'] : '');
             $this->app->redirect($redirectString);
         }
 
@@ -269,7 +284,8 @@ class ProctorController
             }
         }
 
-        $this->app->render('review-page.phtml',
+        $this->app->render(
+            'review-page.phtml',
             array(
                 'reviewObject' => $reviewObject,
                 'hasIncompleteQuestions' => $hasIncompleteQuestions,
@@ -282,7 +298,8 @@ class ProctorController
         );
     }
 
-    public function breakPageAction() {
+    public function breakPageAction()
+    {
         if ($this->app->request->isPost()) {
             $post = $this->app->request->post();
             $newPageArray = $this->getNewPageArray($post);
@@ -301,7 +318,8 @@ class ProctorController
         $stmt->execute(array(':userId' => $_SESSION['user_id']));
         $user = $stmt->fetch(\PDO::FETCH_OBJ);
 
-        $this->app->render('break-page.phtml',
+        $this->app->render(
+            'break-page.phtml',
             array(
                 'firstName' => $user->first_name,
                 'lastName' => $user->last_name,
@@ -313,7 +331,8 @@ class ProctorController
         );
     }
 
-    public function lunchPageAction() {
+    public function lunchPageAction()
+    {
         if ($this->app->request->isPost()) {
             $post = $this->app->request->post();
             $newPageArray = $this->getNewPageArray($post);
@@ -332,7 +351,8 @@ class ProctorController
         $stmt->execute(array(':userId' => $_SESSION['user_id']));
         $user = $stmt->fetch(\PDO::FETCH_OBJ);
 
-        $this->app->render('lunch-page.phtml',
+        $this->app->render(
+            'lunch-page.phtml',
             array(
                 'firstName' => $user->first_name,
                 'lastName' => $user->last_name,
@@ -344,13 +364,14 @@ class ProctorController
         );
     }
 
-    public function voidPageAction() {
+    public function voidPageAction()
+    {
         if ($this->app->request->isPost()) {
             $post = $this->app->request->post();
 
             if ($post['void'] == 'VOID') {
                 $this->voidExam();
-                $this->app->flash('message','Your recent MCAT exam has been permanently deleted.');
+                $this->app->flash('message', 'Your recent MCAT exam has been permanently deleted.');
                 $this->app->redirect('/user');
             } else {
                 $this->scoreExam();
@@ -363,7 +384,8 @@ class ProctorController
 
         $timeRemaining = $this->getTimeRemaining();
 
-        $this->app->render('void-page.phtml',
+        $this->app->render(
+            'void-page.phtml',
             array(
                 'timeRemaining' => $timeRemaining,
                 'examId' => $this->examId,
@@ -373,7 +395,8 @@ class ProctorController
         );
     }
 
-    public function finishPageAction() {
+    public function finishPageAction()
+    {
 
         //Get user
         $sql = 'SELECT * FROM user WHERE user_id = :userId';
@@ -381,7 +404,8 @@ class ProctorController
         $stmt->execute(array(':userId' => $_SESSION['user_id']));
         $user = $stmt->fetch(\PDO::FETCH_OBJ);
 
-        $this->app->render('finish-page.phtml',
+        $this->app->render(
+            'finish-page.phtml',
             array(
                 'firstName' => $user->first_name,
                 'lastName' => $user->last_name,
@@ -389,7 +413,8 @@ class ProctorController
         );
     }
 
-    public function reviewDirectionsPageAction() {
+    public function reviewDirectionsPageAction()
+    {
         if ($this->app->request->isPost()) {
             $post = $this->app->request->post();
             $newPageArray = $this->getNewPageArrayForReview($post);
@@ -409,11 +434,12 @@ class ProctorController
         $section = $result['Section'];
         $sectionObject = new McatSection($section);
 
-        $this->app->render('review-directions-page.phtml',
+        $this->app->render(
+            'review-directions-page.phtml',
             array(
                 'firstPagesOfSections' => $firstPagesOfSections,
                 'section' => $section,
-				'sectionObject' => $sectionObject,
+                'sectionObject' => $sectionObject,
                 'examId' => $this->examId,
                 'fullLengthNumber' => $this->fullLengthNumber,
                 'pageNumber' => $this->pageNumber
@@ -421,11 +447,12 @@ class ProctorController
         );
     }
 
-    public function reviewContentPageAction() {
+    public function reviewContentPageAction()
+    {
         if ($this->app->request->isPost()) {
             $post = $this->app->request->post();
 
-			$answers = array();
+            $answers = array();
 
             //validate submitted answers and build answer array
             foreach ($post as $key => $value) {
@@ -451,19 +478,19 @@ class ProctorController
 
             $newPageArray = $this->getNewPageArrayForReview($post);
             $this->updateExamState('NULL', $newPageArray['PageNumber']);
-			$redirectString = '/full-length/' . $newPageArray['PageType'] . '-page/' . $this->examId . '/';
+            $redirectString = '/full-length/' . $newPageArray['PageType'] . '-page/' . $this->examId . '/';
             $redirectString .= $this->fullLengthNumber . '/' . $newPageArray['PageNumber'] . (isset($post['previous']) ? '?p' : '');
             $this->app->redirect($redirectString);
         }
 
-		$previous = (isset($_GET['p'])) ? true : false;
+        $previous = (isset($_GET['p'])) ? true : false;
         $x = $this->retrieveAnnotations();
         $annotationCount = $x['AnnotationCount'];
         $passage = ($x['AnnotationCount'] == 0) ? $this->retrievePassage() : $x['Annotation'];
         $items = $this->retrieveItems(true); //get items WITH SOLUTIONS!
         $firstPagesOfSections = $this->getFirstPagesOfSections();
 
-		//get their section without doing another db query.
+        //get their section without doing another db query.
         if ($this->pageNumber < $firstPagesOfSections['crit'] && $this->pageNumber > $firstPagesOfSections['phys']) {
             $section = 'phys';
         } elseif ($this->pageNumber < $firstPagesOfSections['bio'] && $this->pageNumber > $firstPagesOfSections['crit']) {
@@ -476,14 +503,15 @@ class ProctorController
 
         $paginationArray = $this->getContentPaginationArray();
 
-        $this->app->render('review-content-page.phtml',
+        $this->app->render(
+            'review-content-page.phtml',
             array(
                 'firstPagesOfSections' => $firstPagesOfSections,
-				'previous' => $previous,
+                'previous' => $previous,
                 'items' => $items,
                 'passage' => $passage,
-				'annotationCount' => $annotationCount,
-				'section' => $section,
+                'annotationCount' => $annotationCount,
+                'section' => $section,
                 'paginationArray' => $paginationArray,
                 'examId' => $this->examId,
                 'fullLengthNumber' => $this->fullLengthNumber,
@@ -492,25 +520,27 @@ class ProctorController
         );
     }
 
-    public function reviewReviewPageAction() {
+    public function reviewReviewPageAction()
+    {
         if ($this->app->request->isPost()) {
             $post = $this->app->request->post();
             $newPageArray = $this->getNewPageArrayForReview($post);
             $this->updateExamState('NULL', $newPageArray['PageNumber']);
-			$redirectString = '/full-length/' . $newPageArray['PageType'] . '-page/' . $this->examId . '/';
+            $redirectString = '/full-length/' . $newPageArray['PageType'] . '-page/' . $this->examId . '/';
             $redirectString .= $this->fullLengthNumber . '/' . $newPageArray['PageNumber'] . (isset($post['previous']) ? '?p' : '');
             $this->app->redirect($redirectString);
         }
 
         $firstPagesOfSections = $this->getFirstPagesOfSections();
         $reviewObject = $this->retrieveReviewObjectForReview();
-		$section = $reviewObject[0]['Section'];
+        $section = $reviewObject[0]['Section'];
 
-        $this->app->render('review-review-page.phtml',
+        $this->app->render(
+            'review-review-page.phtml',
             array(
                 'firstPagesOfSections' => $firstPagesOfSections,
                 'reviewObject' => $reviewObject,
-				'section' => $section,
+                'section' => $section,
                 'examId' => $this->examId,
                 'fullLengthNumber' => $this->fullLengthNumber,
                 'pageNumber' => $this->pageNumber
@@ -521,7 +551,8 @@ class ProctorController
      * Proctor Services
      *******************************************************************************/
 
-    protected function getNewPageArray(array $postData) {
+    protected function getNewPageArray(array $postData)
+    {
         $newPageArray = array();
         $newPageArray['IsNewSection'] = false;
         if (isset($postData['timeRemaining']) && ($postData['timeRemaining'] == 0)) {//time has expired
@@ -569,7 +600,7 @@ class ProctorController
             $stmt = $this->app->db->prepare($sql);
             $stmt->execute(array(':fullLengthNumber' => $this->fullLengthNumber, ':newPageNumber' => $newPageArray['PageNumber']));
             $result = $stmt->fetch(\PDO::FETCH_ASSOC);
-			$newPageArray['PageType'] = $result['PageType'];
+            $newPageArray['PageType'] = $result['PageType'];
             $newPageArray['Section'] = $result['Section'];
             return $newPageArray;
         } elseif (isset($postData['review'])) {
@@ -589,14 +620,14 @@ class ProctorController
             $newPageArray['PageNumber'] = (int) $incompletePage['PageNumber'];
             $newPageArray['PageType'] = 'content';
             $newPageArray['Section'] = $incompletePage['Section'];
-			$newPageArray['ItemNumber'] = $incompletePage['ItemNumber'];
+            $newPageArray['ItemNumber'] = $incompletePage['ItemNumber'];
             return $newPageArray;
         } elseif (isset($postData['reviewMarked'])) {
             $markedPage = $this->findFirstMarkedPageOfSection();
             $newPageArray['PageNumber'] = (int) $markedPage['PageNumber'];
             $newPageArray['PageType'] = 'content';
             $newPageArray['Section'] = $markedPage['Section'];
-			$newPageArray['ItemNumber'] = $markedPage['ItemNumber'];
+            $newPageArray['ItemNumber'] = $markedPage['ItemNumber'];
             return $newPageArray;
         } elseif (isset($postData['end'])) {
             //These values are hard coded! They'll break if the tutorial section changes.
@@ -608,7 +639,8 @@ class ProctorController
         }
     }
 
-    protected function getNewPageArrayForReview(array $postData) {
+    protected function getNewPageArrayForReview(array $postData)
+    {
         $newPageArray = array();
 
         if (isset($postData['next']) || isset($postData['endSection'])) {
@@ -666,7 +698,8 @@ class ProctorController
         }
     }
 
-    protected function retrieveReviewObject() {
+    protected function retrieveReviewObject()
+    {
         //do two separate queries to avoid joining on the submitted_answers table
         $sql = 'SELECT Section, ItemNumber, PageNumber FROM full_length_info';
         $sql .= ' WHERE FullLengthNumber = :fullLengthNumber AND PageType = \'content\' AND Section = ';
@@ -697,7 +730,8 @@ class ProctorController
         return $items;
     }
 
-    protected function retrieveReviewObjectForReview() {
+    protected function retrieveReviewObjectForReview()
+    {
         //do two separate queries to avoid joining on the submitted_answers table
         $sql = 'SELECT Section, ItemNumber, PageNumber, Answer FROM full_length_info';
         $sql .= ' WHERE FullLengthNumber = :fullLengthNumber AND PageType = \'content\' AND Section = ';
@@ -725,14 +759,17 @@ class ProctorController
         for ($i=0; $i<count($items); $i++) {
             if ($items[$i]['Answer'] == $submittedAnswers[$i]['SubmittedAnswer']) {
                 $items[$i]['Correct'] = 'Correct';
-            } else {$items[$i]['Correct'] = 'Incorrect'; }
+            } else {
+                $items[$i]['Correct'] = 'Incorrect';
+            }
             $items[$i] = array_merge($items[$i], $submittedAnswers[$i]);
             $items[$i]['OffsetItemNumber'] = $items[$i]['ItemNumber'] - $offset;
         }
         return $items;
     }
 
-    protected function getContentPaginationArray() {
+    protected function getContentPaginationArray()
+    {
         $sql = 'SELECT MIN(ItemNumber) as min, MAX(ItemNumber) as max, Section FROM full_length_info';
         $sql .= ' WHERE FullLengthNumber = :fullLengthNumber AND PageNumber = :pageNumber GROUP BY Section';
         $stmt = $this->app->db->prepare($sql);
@@ -747,13 +784,18 @@ class ProctorController
         );
     }
 
-    protected function retrieveItems($review = false) {
+    protected function retrieveItems($review = false)
+    {
         //Do two separate db queries in order to avoid joining on the submitted_answers table.
         //get the items
         $sql = 'SELECT full_length_info.ItemNumber, Section, Answer, Distractor1, Distractor2, Distractor3, QuestionText, AnswerText, Distractor1Text, Distractor2Text, Distractor3Text,';
-            if ($review) {$sql .= ' ExplanationText, Pathology1Text, Pathology2Text, Pathology3Text,';}
+        if ($review) {
+            $sql .= ' ExplanationText, Pathology1Text, Pathology2Text, Pathology3Text,';
+        }
         $sql .= ' QuestionImage, AnswerImage, Distractor1Image, Distractor2Image, Distractor3Image';
-            if ($review) {$sql .= ', ExplanationImage, Pathology1Image, Pathology2Image, Pathology3Image';}
+        if ($review) {
+            $sql .= ', ExplanationImage, Pathology1Image, Pathology2Image, Pathology3Image';
+        }
         $sql .= ' FROM full_length_info JOIN questions ON full_length_info.QuestionId = questions.QuestionId';
         $sql .= ' WHERE FullLengthNumber = :fullLengthNumber AND PageNumber = :pageNumber ORDER BY full_length_info.ItemNumber ASC';
         $stmt = $this->app->db->prepare($sql);
@@ -765,7 +807,7 @@ class ProctorController
         foreach ($items as $key => $value) {
             $itemNumbers .= $value['ItemNumber'].',';
         }
-        $itemNumbers = substr_replace($itemNumbers,')',-1,1); //Nifty trick to remove the last comma and replace it with a ).
+        $itemNumbers = substr_replace($itemNumbers, ')', -1, 1); //Nifty trick to remove the last comma and replace it with a ).
 
         //get submitted answers for the items
         $sql = 'SELECT ItemNumber, SubmittedAnswer, Mark FROM submitted_answers WHERE ExamId = :examId AND ItemNumber IN '.$itemNumbers;
@@ -803,7 +845,7 @@ class ProctorController
             }
 
             //change the 'SubmittedAnswer' element to account for marking.
-            if ($item['SubmittedAnswer'] != NULL) {
+            if ($item['SubmittedAnswer'] != null) {
                 if ($item['Mark'] == 1) {
                     $item['SubmittedAnswer'] = $item['SubmittedAnswer'].'m';
                 }
@@ -821,7 +863,8 @@ class ProctorController
         return $mcatItems;
     }
 
-    protected function findAnswerChoice($letter, array $itemArray)	{
+    protected function findAnswerChoice($letter, array $itemArray)
+    {
         if ($itemArray['Answer'] == $letter) {
             return array($itemArray['AnswerText'], $itemArray['AnswerImage']);
         } elseif ($itemArray['Distractor1'] == $letter) {
@@ -833,7 +876,8 @@ class ProctorController
         }
     }
 
-    protected function findSolution($letter, array $itemArray) {
+    protected function findSolution($letter, array $itemArray)
+    {
         if ($itemArray['Answer'] == $letter) {
             return array($itemArray['ExplanationText'], $itemArray['ExplanationImage']);
         } elseif ($itemArray['Distractor1'] == $letter) {
@@ -845,16 +889,18 @@ class ProctorController
         }
     }
 
-    protected function mapItemStringToItemStringWithImage(array $array) {
+    protected function mapItemStringToItemStringWithImage(array $array)
+    {
         if (!(strpos($array[0], '__PIC__') === false)) {
-        $url = getenv('LHP_FULL_LENGTH_BUCKET') . $array[1];
-      //$url = CloudStorageTools::getPublicUrl('gs://lhp-full-length-images/'.$array[1], true);
+            $url = getenv('LHP_FULL_LENGTH_BUCKET') . $array[1];
+            //$url = CloudStorageTools::getPublicUrl('gs://lhp-full-length-images/'.$array[1], true);
             return str_replace('__PIC__', '<img src="'.$url.'">', $array[0]);
         }
         return $array[0];
     }
 
-    protected function getItemOffset($section) {
+    protected function getItemOffset($section)
+    {
         switch ($section) {
             case 'phys': return 0; break;
             case 'crit': return McatSection::getNumberOfItems('phys'); break;
@@ -863,7 +909,8 @@ class ProctorController
         }
     }
 
-    protected function retrievePassage() {
+    protected function retrievePassage()
+    {
         $sql = 'SELECT PassageText, PassageImage1, PassageImage2, PassageImage3, PassageImage4, PassageImage5';
         $sql .= ' FROM full_length_info JOIN passages ON full_length_info.PassageId = passages.PassageId';
         $sql .= ' WHERE FullLengthNumber = :fullLengthNumber AND PageNumber = :pageNumber LIMIT 1';
@@ -877,7 +924,8 @@ class ProctorController
         }
     }
 
-	protected function retrieveAnnotations() {
+    protected function retrieveAnnotations()
+    {
         $sql = 'SELECT Annotation, AnnotationCount FROM annotations';
         $sql .= ' WHERE ExamId = :examId AND PageNumber = :pageNumber';
         $stmt = $this->app->db->prepare($sql);
@@ -886,41 +934,43 @@ class ProctorController
         return $result;
     }
 
-    protected function mapPassageArrayToString(array $passage) {
+    protected function mapPassageArrayToString(array $passage)
+    {
         $text = $passage['PassageText'];
         if (!(strpos($text, '__PIC1__') === false)) {
-			//$url = CloudStorageTools::getPublicUrl('gs://lhp-full-length-images/'.$passage['PassageImage1'], true);
-      $url = getenv('LHP_FULL_LENGTH_BUCKET') . $passage['PassageImage1'];
+            //$url = CloudStorageTools::getPublicUrl('gs://lhp-full-length-images/'.$passage['PassageImage1'], true);
+            $url = getenv('LHP_FULL_LENGTH_BUCKET') . $passage['PassageImage1'];
             $text = str_replace('__PIC1__', '<img src="'.$url.'">', $text);
         }
         if (!(strpos($text, '__PIC2__') === false)) {
-			//$url = CloudStorageTools::getPublicUrl('gs://lhp-full-length-images/'.$passage['PassageImage2'], true);
-      $url = getenv('LHP_FULL_LENGTH_BUCKET') . $passage['PassageImage2'];
+            //$url = CloudStorageTools::getPublicUrl('gs://lhp-full-length-images/'.$passage['PassageImage2'], true);
+            $url = getenv('LHP_FULL_LENGTH_BUCKET') . $passage['PassageImage2'];
             $text = str_replace('__PIC2__', '<img src="'.$url.'">', $text);
         }
         if (!(strpos($text, '__PIC3__') === false)) {
-			//$url = CloudStorageTools::getPublicUrl('gs://lhp-full-length-images/'.$passage['PassageImage3'], true);
-      $url = getenv('LHP_FULL_LENGTH_BUCKET') . $passage['PassageImage3'];
+            //$url = CloudStorageTools::getPublicUrl('gs://lhp-full-length-images/'.$passage['PassageImage3'], true);
+            $url = getenv('LHP_FULL_LENGTH_BUCKET') . $passage['PassageImage3'];
             $text = str_replace('__PIC3__', '<img src="'.$url.'">', $text);
         }
         if (!(strpos($text, '__PIC4__') === false)) {
-			//$url = CloudStorageTools::getPublicUrl('gs://lhp-full-length-images/'.$passage['PassageImage4'], true);
-      $url = getenv('LHP_FULL_LENGTH_BUCKET') . $passage['PassageImage4'];
+            //$url = CloudStorageTools::getPublicUrl('gs://lhp-full-length-images/'.$passage['PassageImage4'], true);
+            $url = getenv('LHP_FULL_LENGTH_BUCKET') . $passage['PassageImage4'];
             $text = str_replace('__PIC4__', '<img src="'.$url.'">', $text);
         }
         if (!(strpos($text, '__PIC5__') === false)) {
-			//$url = CloudStorageTools::getPublicUrl('gs://lhp-full-length-images/'.$passage['PassageImage5'], true);
-      $url = getenv('LHP_FULL_LENGTH_BUCKET') . $passage['PassageImage5'];
+            //$url = CloudStorageTools::getPublicUrl('gs://lhp-full-length-images/'.$passage['PassageImage5'], true);
+            $url = getenv('LHP_FULL_LENGTH_BUCKET') . $passage['PassageImage5'];
             $text = str_replace('__PIC5__', '<img src="'.$url.'">', $text);
         }
         return $text;
     }
 
-    protected function saveAnswers(array $answers) {
+    protected function saveAnswers(array $answers)
+    {
         $sql = '';
         foreach ($answers as $item => $answer) {
             if (strpos($answer, 'm') === 1) {
-                $sql .= 'UPDATE submitted_answers SET SubmittedAnswer = \''.substr($answer,0,1).'\'';
+                $sql .= 'UPDATE submitted_answers SET SubmittedAnswer = \''.substr($answer, 0, 1).'\'';
                 $sql .= ', Mark = 1';
             } elseif (strpos($answer, 'm') === 0) {
                 $sql .= 'UPDATE submitted_answers SET SubmittedAnswer = NULL, Mark = 1';
@@ -938,7 +988,8 @@ class ProctorController
         $stmt->execute();
     }
 
-	protected function saveAnnotation($annotation, $annoCount) {
+    protected function saveAnnotation($annotation, $annoCount)
+    {
         $sql = 'UPDATE annotations SET Annotation = :annotation, AnnotationCount = :annoCount';
         $sql .= ' WHERE ExamId = :examId AND PageNumber = :pageNumber';
         $stmt = $this->app->db->prepare($sql);
@@ -950,7 +1001,8 @@ class ProctorController
         ));
     }
 
-    protected function getTimeRemaining() {
+    protected function getTimeRemaining()
+    {
         $sql = 'SELECT TimeRemaining FROM exams WHERE ExamId = :examId';
         $stmt = $this->app->db->prepare($sql);
         $stmt->execute(array(':examId' => $this->examId));
@@ -958,13 +1010,15 @@ class ProctorController
         return $result['TimeRemaining'];
     }
 
-    protected function updateExamState($timeRemaining, $currentPageNumber) {
+    protected function updateExamState($timeRemaining, $currentPageNumber)
+    {
         $sql = 'UPDATE exams SET CurrentPageNumber = :currentPageNumber, TimeRemaining = :timeRemaining WHERE examId = :examId';
         $stmt = $this->app->db->prepare($sql);
         $stmt->execute(array(':currentPageNumber' => $currentPageNumber, ':timeRemaining' => $timeRemaining, ':examId' => $this->examId));
     }
 
-    protected function findFirstMarkedPageOfSection() {
+    protected function findFirstMarkedPageOfSection()
+    {
         //Don't want to use joins on submitted_answers table because it can get big.
         $sql = 'SELECT MIN(ItemNumber) as FirstMarkedItem FROM submitted_answers WHERE ExamId = :examId AND Mark = 1 AND ItemNumber IN ';
         $sql .= '(SELECT ItemNumber FROM full_length_info WHERE PageType = \'content\' AND FullLengthNumber = :fullLengthNumber AND Section = ';
@@ -988,8 +1042,9 @@ class ProctorController
         return $result;
     }
 
-    protected function findFirstIncompletePageOfSection() {
-	     //Don't want to use joins on submitted_answers table because it can get big. Strategy...
+    protected function findFirstIncompletePageOfSection()
+    {
+        //Don't want to use joins on submitted_answers table because it can get big. Strategy...
         //1)Get lowest incomplete item of section. 2)Get page number associated with lowest incomplete item 3)Merge them.
 
         $sql = 'SELECT MIN(ItemNumber) as FirstIncompleteItem FROM submitted_answers WHERE ExamId = :examId AND SubmittedAnswer IS NULL AND ItemNumber IN ';
@@ -1012,9 +1067,10 @@ class ProctorController
 
         $result['ItemNumber'] = $firstIncompleteItem;
         return $result;
-	}
+    }
 
-    protected function findFirstPageOfSection() {
+    protected function findFirstPageOfSection()
+    {
         //prime candidate for caching. This should only change when the actual full_length_info table gets changed.
         $sql = 'SELECT PageNumber, Section FROM full_length_info';
         $sql .= ' WHERE FullLengthNumber = :fullLengthNumber AND PageType = \'content\' AND Section = ';
@@ -1026,7 +1082,8 @@ class ProctorController
         return $result;
     }
 
-    protected function findReviewPage() {
+    protected function findReviewPage()
+    {
         $sql = 'SELECT PageNumber, Section FROM full_length_info WHERE FullLengthNumber = :fullLengthNumber';
         $sql .= ' AND PageType = \'review\' AND PageNumber > :pageNumber LIMIT 1';
         $stmt = $this->app->db->prepare($sql);
@@ -1035,7 +1092,8 @@ class ProctorController
         return $result;
     }
 
-    protected function getNextPageIfTimeHasExpired() {
+    protected function getNextPageIfTimeHasExpired()
+    {
         $sql = 'SELECT PageNumber, PageType, Section FROM full_length_info WHERE FullLengthNumber = :fullLengthNumber ';
         $sql .= 'AND PageNumber > :pageNumber AND (PageType, Section) != (SELECT PageType, Section FROM full_length_info ';
         $sql .= 'WHERE PageNumber = :pageNumber LIMIT 1) AND PageType != \'review\' ORDER BY PageNumber ASC LIMIT 1';
@@ -1044,7 +1102,8 @@ class ProctorController
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
-    protected function scoreExam() {
+    protected function scoreExam()
+    {
         //This query joins on the submitted_answers table. It should be longest query in the entire full-length module. Use it for benchmarking.
         //Also a great candidate for appengine task queue, because student gets redirected to finish page, then has to click back to home page before seeing score.
 
@@ -1061,7 +1120,7 @@ class ProctorController
             $rawScore[$section] = $result['raw_score'];
         }
 
-		//input raw scores
+        //input raw scores
         $sql = 'UPDATE exams SET PhysRawScore = :physRawScore, CritRawScore = :critRawScore, BioRawScore = :bioRawScore, PsyRawScore = :psyRawScore';
         $sql .= ' WHERE ExamId = :examId';
         $stmt = $this->app->db->prepare($sql);
@@ -1100,13 +1159,15 @@ class ProctorController
         ));
     }
 
-    protected function voidExam() {
+    protected function voidExam()
+    {
         $sql = 'DELETE FROM exams WHERE ExamId = :examId';
         $stmt = $this->app->db->prepare($sql);
         $stmt->execute(array(':examId' => $this->examId));
     }
 
-    public function getFirstPagesOfSections() {
+    public function getFirstPagesOfSections()
+    {
         $sql = 'SELECT Section, PageNumber FROM full_length_info WHERE PageType = \'directions\' AND FullLengthNumber = :fullLengthNumber';
         $stmt = $this->app->db->prepare($sql);
         $stmt->execute(array(':fullLengthNumber' => $this->fullLengthNumber));

@@ -25,21 +25,21 @@ $app = new \Slim\Slim(array(
     'cookies.encrypt' => true,
     'stripe_secret_key' => getenv('STRIPE_SECRET_KEY'),
     'stripe_publishable_key' => getenv('STRIPE_PUBLISHABLE_TEST_KEY'),
-	'debug' => false,
-	'mode' => 'production',
-	'log.enabled' => true
+    'debug' => false,
+    'mode' => 'production',
+    'log.enabled' => true
 ));
 
 $app->add(new \Slim\Middleware\SessionCookie(array(
-	'secret' => getenv('SLIM_COOKIE_SECRET'),
-	'httponly' => true,
-	'name' => 'lenox_hill_premedical_session',
-	'expires' => '100 minutes' //time between clicks.
+    'secret' => getenv('SLIM_COOKIE_SECRET'),
+    'httponly' => true,
+    'name' => 'lenox_hill_premedical_session',
+    'expires' => '100 minutes' //time between clicks.
 )));
 
 
 //Phil - Register PDO factory
-$app->container->singleton('db', function() {
+$app->container->singleton('db', function () {
     $dsn = getenv('MYSQL_DSN');
     $user = getenv('MYSQL_USER');
     $password = getenv('MYSQL_PASSWORD');
@@ -55,7 +55,8 @@ $app->container->singleton('db', function() {
  * is an anonymous function.
  */
 
-$app->map('/writer(/:action)',
+$app->map(
+    '/writer(/:action)',
 //If they are not logged in, deny access
     function () use ($app) {
         if (!isset($_SESSION['user_id'])) {
@@ -79,12 +80,16 @@ $app->map('/writer(/:action)',
         $controller = new Controller\WriterController();
         $controller->setApp($app);
         $controller->dispatchAction($action);
-	})->via('GET', 'POST');
+    }
+)->via('GET', 'POST');
 
-$app->map('/admin(/:action)',
+$app->map(
+    '/admin(/:action)',
     //If they are not logged in, deny access
     function () use ($app) {
-        if (!isset($_SESSION['user_id'])) {$app->redirect('/');}
+        if (!isset($_SESSION['user_id'])) {
+            $app->redirect('/');
+        }
     },
     //If they are not an administrator, log them out
     function () use ($app) {
@@ -94,41 +99,65 @@ $app->map('/admin(/:action)',
         }
     },
     //Set the appropriate layout.
-    function () use ($app) {$app->view->setLayout('admin-layout.phtml');},
+    function () use ($app) {
+        $app->view->setLayout('admin-layout.phtml');
+    },
 
     //Initialize the Admin Controller
     function ($action = 'index') use ($app) {
         $controller = new Controller\AdminController();
         $controller->setApp($app);
         $controller->dispatchAction($action);
-    })->via('GET','POST');
+    }
+)->via('GET', 'POST');
 
-$app->map('/user(/:action)',
-	//added by Phil on 9/23/2016
-	/*function () use ($app) {if (isset($_SESSION['user_id']) && !in_array($_SESSION['user_id'], array(25,34,56,26,64))) {
-		unset($_SESSION);
-		$app->redirect('/');}},*/
-    function () use ($app) {if (isset($_SESSION['user_id'])) {$app->view->setLayout('user-layout.phtml');} else {$app->view->setLayout('layout.phtml');}}, //route middleware to set layout
-	function ($action = 'index') use ($app) {
+$app->map(
+    '/user(/:action)',
+    //added by Phil on 9/23/2016
+    /*function () use ($app) {if (isset($_SESSION['user_id']) && !in_array($_SESSION['user_id'], array(25,34,56,26,64))) {
+        unset($_SESSION);
+        $app->redirect('/');}},*/
+    function () use ($app) {
+        if (isset($_SESSION['user_id'])) {
+            $app->view->setLayout('user-layout.phtml');
+        } else {
+            $app->view->setLayout('layout.phtml');
+        }
+    }, //route middleware to set layout
+    function ($action = 'index') use ($app) {
         $controller = new Controller\UserController();
         $controller->setApp($app);
         $controller->dispatchAction($action);
-    })->via('GET', 'POST');
+    }
+)->via('GET', 'POST');
 
-$app->map('/(:action)',
-	//addded by Phil on 9/23/2016
-	/*function () use ($app) {if (isset($_SESSION['user_id']) && !in_array($_SESSION['user_id'], array(25,34,56,26,64))) {
-		unset($_SESSION);
-		$app->redirect('/');}},*/
-    function () use ($app) {if (isset($_SESSION['user_id'])) {$app->view->setLayout('user-layout.phtml');} else {$app->view->setLayout('layout.phtml');}}, //route middleware to set layout
-	function ($action = 'index') use ($app) {
+$app->map(
+    '/(:action)',
+    //addded by Phil on 9/23/2016
+    /*function () use ($app) {if (isset($_SESSION['user_id']) && !in_array($_SESSION['user_id'], array(25,34,56,26,64))) {
+        unset($_SESSION);
+        $app->redirect('/');}},*/
+    function () use ($app) {
+        if (isset($_SESSION['user_id'])) {
+            $app->view->setLayout('user-layout.phtml');
+        } else {
+            $app->view->setLayout('layout.phtml');
+        }
+    }, //route middleware to set layout
+    function ($action = 'index') use ($app) {
         $controller = new Controller\IndexController();
         $controller->setApp($app);
         $controller->dispatchAction($action);
-	})->via('GET', 'POST');
+    }
+)->via('GET', 'POST');
 
-$app->map('/full-length/:pageType/:examId/:fullLengthNumber/:pageNumber',
-    function () use ($app) {if (!isset($_SESSION['user_id'])) {$app->redirect('/');}},
+$app->map(
+    '/full-length/:pageType/:examId/:fullLengthNumber/:pageNumber',
+    function () use ($app) {
+        if (!isset($_SESSION['user_id'])) {
+            $app->redirect('/');
+        }
+    },
     function ($pageType, $examId, $fullLengthNumber, $pageNumber) use ($app) {
 
         //Validate that query parameters are all integers.
@@ -137,7 +166,7 @@ $app->map('/full-length/:pageType/:examId/:fullLengthNumber/:pageNumber',
         $pageNumber = filter_var($pageNumber, FILTER_VALIDATE_INT, array('options' => array('min_range' => 1, 'max_range' => 100)));
 
         //Log them out if any of the validators fail.
-       if (!$examId || !$fullLengthNumber || !$pageNumber) {
+        if (!$examId || !$fullLengthNumber || !$pageNumber) {
             unset($_SESSION);
             $app->redirect('/');
         }
@@ -163,7 +192,7 @@ $app->map('/full-length/:pageType/:examId/:fullLengthNumber/:pageNumber',
                     }
                     if ($key == 'annotation') {
                         //filter annotations
-						$allowedTags = '<p><b><em><i><ul><ol><li><small><figure><figcaption>';
+                        $allowedTags = '<p><b><em><i><ul><ol><li><small><figure><figcaption>';
                         $allowedTags .= '<br><br/><img><span><sup><sub><h3><strong>';
                         $allowedTags .= '<table><caption><thead><tbody><td><tr><th>';
                         if ($post['annotation'] != strip_tags($post['annotation'], $allowedTags)) {
@@ -171,8 +200,8 @@ $app->map('/full-length/:pageType/:examId/:fullLengthNumber/:pageNumber',
                             $app->redirect('/user');
                         }
                     } elseif (!(in_array($value, $whiteListValues) || is_numeric($value))) {
-                            unset($_SESSION);
-                            $app->redirect('/');
+                        unset($_SESSION);
+                        $app->redirect('/');
                     }
                 }
             }
@@ -213,11 +242,11 @@ $app->map('/full-length/:pageType/:examId/:fullLengthNumber/:pageNumber',
                 $stmt->execute(array(':fullLengthNumber' => $fullLengthNumber,':currentPageNumber' => $currentPageNumber, ':pageNumber' => $pageNumber));
                 $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
                 if (count($result) != 1) {//The page they're trying to access does not have same pageType and Section as the page they're currently on.
-                   if (!($result[0]['PageType'] == 'review' && ($result[0]['Section'] == $result[1]['Section']))) {
-                       //They're trying to access a previous exam page that they're not supposed to. Nothing malicious here. They might have just clicked the back button.
-                       //Redirect them to the page they were just on.
-                       $app->redirect('/full-length/'.$result[0]['PageType'].'-page/'.$examId.'/'.$fullLengthNumber.'/'.$currentPageNumber);
-                   }
+                    if (!($result[0]['PageType'] == 'review' && ($result[0]['Section'] == $result[1]['Section']))) {
+                        //They're trying to access a previous exam page that they're not supposed to. Nothing malicious here. They might have just clicked the back button.
+                        //Redirect them to the page they were just on.
+                        $app->redirect('/full-length/'.$result[0]['PageType'].'-page/'.$examId.'/'.$fullLengthNumber.'/'.$currentPageNumber);
+                    }
                 }
             }
             $app->view->setLayout('full-length-layout.phtml');
@@ -225,14 +254,14 @@ $app->map('/full-length/:pageType/:examId/:fullLengthNumber/:pageNumber',
             $app->view->setLayout('full-length-layout.phtml');
         } else {
             //Make sure the only pagetypes they can access are content, directions, and review.
-			if (!in_array($pageType, array('review-content-page', 'review-directions-page', 'review-review-page'))) {
+            if (!in_array($pageType, array('review-content-page', 'review-directions-page', 'review-review-page'))) {
                 unset($_SESSION);
                 $app->redirect('/');
             }
             $app->view->setLayout('full-length-review-layout.phtml');
         }
 
-    // Check to see if you need to update their current_full_length status
+        // Check to see if you need to update their current_full_length status
         if ($_SESSION['cfl'] != $fullLengthNumber) {
             $sql = 'UPDATE user SET current_full_length = :fullLengthNumber WHERE user_id = :userId';
             $stmt = $app->db->prepare($sql);
@@ -248,7 +277,8 @@ $app->map('/full-length/:pageType/:examId/:fullLengthNumber/:pageNumber',
         $controller->pageNumber = $pageNumber;
         $controller->status = $status;
         $controller->dispatchAction($pageType);
-    })->via('GET', 'POST');
+    }
+)->via('GET', 'POST');
 
 
 

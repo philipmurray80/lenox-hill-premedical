@@ -4,7 +4,6 @@ namespace Controller;
 use Slim\Slim;
 use Model\McatSection;
 
-
 class UserController
 {
     public $app;
@@ -21,12 +20,14 @@ class UserController
         'provision-exam'  => 'provisionExamAction',
     );
 
-    public function dispatchAction($action) {
+    public function dispatchAction($action)
+    {
         $method = $this->actions[$action];
         return $this->$method();
     }
 
-    public function indexAction() {
+    public function indexAction()
+    {
         if (!isset($_SESSION['user_id'])) {
             $this->app->redirect('/user/login');
         }
@@ -40,39 +41,40 @@ class UserController
         $exams = $this->getAllExams($_SESSION['user_id']);
         $stripePublishableKey = $this->app->config('stripe_publishable_key');
 
-		$anonymousStudent = (McatSection::ANONYMOUS_STUDENT_ID == $_SESSION['user_id']) ? true : false;
+        $anonymousStudent = (McatSection::ANONYMOUS_STUDENT_ID == $_SESSION['user_id']) ? true : false;
 
-		$priceInCents = 5000;
-		$promoCode = '';
-		if (isset($_GET['promoCode'])) {
-			if ($_GET['promoCode'] == '') {//they clicked to use a promo code but didn't type anything in.
-				$this->app->flash('message', '<span class="text-danger">If you would like to use a promo code, please type it into the box below.</span>');
-				$this->app->redirect('/user');
-			}
-			$sanitizedPromoCode = filter_var($_GET['promoCode'], FILTER_SANITIZE_ENCODED);
-			$promoCodeInfo = $this->applyPromoCode($sanitizedPromoCode);
-			if (!$promoCodeInfo) {//did not recognize promo code.
-				$this->app->flash('message', '<span class="text-danger">The promo code you submitted does not match any that are currently active. Please try again.</span>');
-				$this->app->redirect('/user');
-			}
-			$promoCode = $promoCodeInfo['promo_code'];
-			$priceInCents = 5000 * (100 - $promoCodeInfo['promo_code_discount'])/100;
-		}
+        $priceInCents = 5000;
+        $promoCode = '';
+        if (isset($_GET['promoCode'])) {
+            if ($_GET['promoCode'] == '') {//they clicked to use a promo code but didn't type anything in.
+                $this->app->flash('message', '<span class="text-danger">If you would like to use a promo code, please type it into the box below.</span>');
+                $this->app->redirect('/user');
+            }
+            $sanitizedPromoCode = filter_var($_GET['promoCode'], FILTER_SANITIZE_ENCODED);
+            $promoCodeInfo = $this->applyPromoCode($sanitizedPromoCode);
+            if (!$promoCodeInfo) {//did not recognize promo code.
+                $this->app->flash('message', '<span class="text-danger">The promo code you submitted does not match any that are currently active. Please try again.</span>');
+                $this->app->redirect('/user');
+            }
+            $promoCode = $promoCodeInfo['promo_code'];
+            $priceInCents = 5000 * (100 - $promoCodeInfo['promo_code_discount'])/100;
+        }
 
         $this->app->render('user-index.phtml', array(
-			'currentFullLength' => $_SESSION['cfl'],
+            'currentFullLength' => $_SESSION['cfl'],
             'now'       => $now,
             'firstName' => $_SESSION['first_name'],
             'exams'     => $exams,
             'expDates'  => $expDates,
             'stripePublishableKey' => $stripePublishableKey,
-			'anonymousStudent' => $anonymousStudent,
-			'priceInCents'	   => $priceInCents,
-			'promoCode'		   => $promoCode
+            'anonymousStudent' => $anonymousStudent,
+            'priceInCents'	   => $priceInCents,
+            'promoCode'		   => $promoCode
         ));
     }
 
-    public function loginAction() {
+    public function loginAction()
+    {
         //if they're already logged in, send them to user homepage.
         if (isset($_SESSION['user_id'])) {
             $this->app->redirect('/user');
@@ -90,20 +92,20 @@ class UserController
                 $this->app->redirect('/user/login');
             }
 
-			//add salt to password
-			$password = 'mcat'.$password.'2015';
+            //add salt to password
+            $password = 'mcat'.$password.'2015';
 
             $sql = 'SELECT * FROM user WHERE email = :email AND password = :password'; //todo make sure emails are unique in database
-			$stmt = $this->app->db->prepare($sql);
-			$stmt->execute(array(':email' => $email, ':password' => md5($password)));
+            $stmt = $this->app->db->prepare($sql);
+            $stmt->execute(array(':email' => $email, ':password' => md5($password)));
 
 
             if ($stmt->rowCount() == 1) {
                 $user = $stmt->fetch(\PDO::FETCH_OBJ); //user has been authenticated
                 $_SESSION['user_id'] = $user->user_id;
                 $_SESSION['first_name'] = $user->first_name;
-				$_SESSION['cfl'] = $user->current_full_length;
-				$_SESSION['role'] = $user->role;
+                $_SESSION['cfl'] = $user->current_full_length;
+                $_SESSION['role'] = $user->role;
                 $this->app->redirect('/user');
             } else {
                 $this->app->flash('errors', array('login' => true));
@@ -122,16 +124,17 @@ class UserController
             $message = 'Your Lenox Hill Premedical email/password combination is incorrect. Please try again.';
         }
 
-		if ($this->app->request->get('beginFreeMcat') == 'true') {
-			$beginFreeMcat = true;
-		} else {
-			$beginFreeMcat = false;
-		}
+        if ($this->app->request->get('beginFreeMcat') == 'true') {
+            $beginFreeMcat = true;
+        } else {
+            $beginFreeMcat = false;
+        }
 
         $this->app->render('user-login.phtml', array('message' => $message, 'beginFreeMcat' => $beginFreeMcat));
     }
 
-    public function logoutAction() {
+    public function logoutAction()
+    {
         if (isset($_SESSION['user_id']) || isset($_SESSION['first_name'])) {
             unset($_SESSION);
             $this->app->flash('message', '<span style="color:green">You have successfully logged out of your Lenox Hill Premedical account</span>');
@@ -139,7 +142,8 @@ class UserController
         $this->app->redirect('/user/login');
     }
 
-    public function registerAction() {
+    public function registerAction()
+    {
         //Don't need to register them if they are already logged in.
         if (isset($_SESSION['user_id'])) {
             $this->app->redirect('/user');
@@ -215,7 +219,7 @@ class UserController
             }
 
             //register the user.
-			//add salt to password.
+            //add salt to password.
             $password = 'mcat'.$password.'2015';
             $stmt = $db->prepare('INSERT INTO user (email, password, first_name, last_name) VALUES (:email, :password, :firstName, :lastName)');
             $stmt->execute(array(':email' => $email, ':password' => md5($password), ':firstName' => $firstName, ':lastName' => $lastName));
@@ -228,16 +232,16 @@ class UserController
                 $this->grantFullLengthAccess($userId, $i, $expDate);
             }
 
-			//Give them 1 year free access to full-length 1
-			$oneYear = new \DateTime('now', new \DateTimeZone('America/New_York'));
-			$oneYear = $oneYear->add(new \DateInterval('P365D'));
-			$this->updateFullLengthExpirationDate($userId, 1, $oneYear);
+            //Give them 1 year free access to full-length 1
+            $oneYear = new \DateTime('now', new \DateTimeZone('America/New_York'));
+            $oneYear = $oneYear->add(new \DateInterval('P365D'));
+            $this->updateFullLengthExpirationDate($userId, 1, $oneYear);
 
             //Log them in.
             $user = $this->findById($userId);
             $_SESSION['user_id'] = $userId;
             $_SESSION['first_name'] = $user->first_name;
-			$_SESSION['cfl'] = $user->current_full_length;
+            $_SESSION['cfl'] = $user->current_full_length;
 
             //Redirect them to user homepage.
             $this->app->redirect('/user');
@@ -246,7 +250,8 @@ class UserController
         $this->app->render('user-register.phtml');
     }
 
-    public function forgotPasswordAction() {
+    public function forgotPasswordAction()
+    {
         //Clean expired forgot requests
         $oneDayAgo = new \DateTime('86400 seconds ago', new \DateTimeZone('America/New_York'));
         $sql = 'DELETE FROM user_password_reset WHERE request_time <= \''.$oneDayAgo->format('Y-m-d H:i:s').'\'';
@@ -275,7 +280,8 @@ class UserController
         $this->app->render('user-forgot-password.phtml');
     }
 
-    public function resetPasswordAction() {
+    public function resetPasswordAction()
+    {
         if (isset($_SESSION['user_id'])) {
             $this->app->redirect('/user');
         }
@@ -287,9 +293,9 @@ class UserController
 
         $token = $this->app->request->get('token');
         $sql = 'SELECT user_id FROM user_password_reset WHERE request_key = :token';
-		$stmt = $this->app->db->prepare($sql);
-		$stmt->execute(array(':token' => $token));
-		$userId = $stmt->fetch(\PDO::FETCH_ASSOC)['user_id'];
+        $stmt = $this->app->db->prepare($sql);
+        $stmt->execute(array(':token' => $token));
+        $userId = $stmt->fetch(\PDO::FETCH_ASSOC)['user_id'];
 
         if ($userId === null) {
             $this->app->redirect('/user/forgot-password');
@@ -311,14 +317,14 @@ class UserController
                 $this->app->redirect('/user/reset-password?token='.$token);
             }
 
-			//add salt to new credential
-			$newCredential = 'mcat'.$newCredential.'2015';
+            //add salt to new credential
+            $newCredential = 'mcat'.$newCredential.'2015';
 
             //Change password and then delete password request
             $sql = 'UPDATE user SET password = :newCredential WHERE user_id = :userId; ';
             $sql .= 'DELETE FROM user_password_reset WHERE request_key = :token';
             $stmt = $this->app->db->prepare($sql);
-			$stmt->execute(array(':newCredential' => md5($newCredential), ':userId' => $user->user_id, ':token' => $token));
+            $stmt->execute(array(':newCredential' => md5($newCredential), ':userId' => $user->user_id, ':token' => $token));
 
             $this->app->render('user-password-changed.phtml');
             return;
@@ -327,15 +333,16 @@ class UserController
         $this->app->render('user-reset-password.phtml', array('email' => $user->email, 'token' => $token));
     }
 
-    public function provisionExamAction() {
+    public function provisionExamAction()
+    {
         if (!isset($_SESSION['user_id'])) {
             $this->app->redirect('/user/login');
         }
 
         $userId = $_SESSION['user_id'];
-        $fullLengthNumber = filter_var($this->app->request->get('fullLengthNumber'),FILTER_VALIDATE_INT);
+        $fullLengthNumber = filter_var($this->app->request->get('fullLengthNumber'), FILTER_VALIDATE_INT);
 
-		//Phil - Jan, 2015 the in_array bit is for safety until full-lengths 4-5 are available.
+        //Phil - Jan, 2015 the in_array bit is for safety until full-lengths 4-5 are available.
         if (!$fullLengthNumber || in_array($fullLengthNumber, array(4,5))) {//suspect malicious activity
             unset($_SESSION);
             $this->app->redirect('/');
@@ -351,17 +358,18 @@ class UserController
         if ($numExams < 10) {
             $examId = $this->createExam($userId, $fullLengthNumber);
             $this->populateExam($examId, $fullLengthNumber);
-			if (isset($_GET['studyMode'])) {
+            if (isset($_GET['studyMode'])) {
                 $this->processExamForStudyMode($examId, $fullLengthNumber);
             }
         } else {
             $this->app->flash(
-                'message', 'You have exceeded your exam limit. Please delete an old exam, and then you will be able to begin a new one. Thank you.'
+                'message',
+                'You have exceeded your exam limit. Please delete an old exam, and then you will be able to begin a new one. Thank you.'
             );
             $this->app->redirect('/user');
         }
 
-		//update current_full_length status
+        //update current_full_length status
         if ($_SESSION['cfl'] != $fullLengthNumber) {
             $this->updateCurrentFullLength($userId, $fullLengthNumber);
             $_SESSION['cfl'] = $fullLengthNumber;
@@ -377,13 +385,14 @@ class UserController
         $this->app->redirect($redirectString);
     }
 
-    public function deleteExamAction() {
+    public function deleteExamAction()
+    {
         if (!isset($_SESSION['user_id'])) {
             $this->app->redirect('/user/login');
         }
 
         $userId = $_SESSION['user_id'];
-        $examId = filter_var($this->app->request->get('examId'),FILTER_VALIDATE_INT);
+        $examId = filter_var($this->app->request->get('examId'), FILTER_VALIDATE_INT);
 
         if (!$examId) {//suspect malicious activity
             unset($_SESSION);
@@ -395,7 +404,7 @@ class UserController
             $this->app->redirect('/');
         }
 
-		//Find out the full-length-number of the exam they are attempting to delete
+        //Find out the full-length-number of the exam they are attempting to delete
         //so that you can update their current_full_length status.
         $sql = 'SELECT FullLengthNumber FROM exams WHERE ExamId = :examId';
         $stmt = $this->app->db->prepare($sql);
@@ -403,10 +412,10 @@ class UserController
         $result = $stmt->fetch(\PDO::FETCH_ASSOC);
         $fullLengthNumber = $result['FullLengthNumber'];
 
-		//Delete the exam
+        //Delete the exam
         $this->deleteExam($examId);
 
-		//Update current_full_length status
+        //Update current_full_length status
         if ($_SESSION['cfl'] != $fullLengthNumber) {
             $this->updateCurrentFullLength($userId, $fullLengthNumber);
             $_SESSION['cfl'] = $fullLengthNumber;
@@ -415,16 +424,20 @@ class UserController
         $this->app->redirect('/user');
     }
 
-    public function setApp(Slim $app) {
+    public function setApp(Slim $app)
+    {
         $this->app = $app;
     }
 
-    protected function hasAccessToFullLength($userId, $fullLengthNumber) {
+    protected function hasAccessToFullLength($userId, $fullLengthNumber)
+    {
         $sql = 'SELECT ExpDate FROM full_length_access WHERE UserId = :userId AND FullLengthNumber = :fullLengthNumber';
         $stmt = $this->app->db->prepare($sql);
         $stmt->execute(array(':userId' => $userId, ':fullLengthNumber' => $fullLengthNumber));
         $result = $stmt->fetch(\PDO::FETCH_ASSOC);
-        if (empty($result)) {return false;}
+        if (empty($result)) {
+            return false;
+        }
 
         $expDate = $result['ExpDate'];
         $now = new \DateTime();
@@ -435,14 +448,16 @@ class UserController
         }
     }
 
-    protected function getNumExams($userId, $fullLengthNumber) {
+    protected function getNumExams($userId, $fullLengthNumber)
+    {
         $sql = 'SELECT * FROM exams WHERE UserId = :userId AND FullLengthNumber = :fullLengthNumber';
         $stmt = $this->app->db->prepare($sql);
         $stmt->execute(array(':userId' => $userId, ':fullLengthNumber' => $fullLengthNumber));
         return $stmt->rowCount();
     }
 
-    protected function createExam($userId, $fullLengthNumber) {
+    protected function createExam($userId, $fullLengthNumber)
+    {
         $dateTime = new \DateTime('now', new \DateTimeZone('America/New_York'));
         $dateCreated = $dateTime->format('Y-m-d H:i:s');
         $sql = 'INSERT INTO exams (UserId, FullLengthNumber, CurrentPageNumber, DateCreated)';
@@ -453,7 +468,8 @@ class UserController
         return $db->lastInsertId();
     }
 
-    protected function ownsExam($userId, $examId) {
+    protected function ownsExam($userId, $examId)
+    {
         $sql = 'SELECT * FROM exams WHERE (UserId, ExamId) = (:userId, :examId)';
         $stmt = $this->app->db->prepare($sql);
         $stmt->execute(array(':userId' => $userId, ':examId' => $examId));
@@ -461,14 +477,16 @@ class UserController
         return (count($result) == 1) ? true : false;
     }
 
-    protected function deleteExam($examId) {
+    protected function deleteExam($examId)
+    {
         $sql = 'DELETE FROM exams WHERE ExamId = :examId';
         $stmt = $this->app->db->prepare($sql);
         $stmt->execute(array(':examId' => $examId));//Should cascade and delete all submitted answers automatically.
     }
 
-    protected function populateExam($examId, $fullLengthNumber) {
-		//Create the scan tron.
+    protected function populateExam($examId, $fullLengthNumber)
+    {
+        //Create the scan tron.
         $numQuestions = McatSection::PHYS_NUMBER_ITEMS+McatSection::CRIT_NUMBER_ITEMS+McatSection::BIO_NUMBER_ITEMS+McatSection::PSY_NUMBER_ITEMS;
         $string = '';
         for ($i=1; $i<$numQuestions; $i++) {
@@ -479,7 +497,7 @@ class UserController
         $stmt = $this->app->db->prepare($sql);
         $stmt->execute(array(':examId' => $examId));
 
-		//Create the annotation material
+        //Create the annotation material
         //Get all page numbers for content pages of exam
         $sql = 'SELECT DISTINCT PageNumber FROM full_length_info';
         $sql .= ' WHERE FullLengthNumber = :fullLengthNumber AND PageType = \'content\'';
@@ -487,7 +505,7 @@ class UserController
         $stmt->execute(array(':fullLengthNumber' => $fullLengthNumber));
         $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-		//Create the annotation scan tron.
+        //Create the annotation scan tron.
         $string = '';
         foreach ($result as $key => $value) {
             $string .= '(:examId, '.$value['PageNumber'].'),';
@@ -498,23 +516,25 @@ class UserController
         $stmt->execute(array(':examId' => $examId));
     }
 
-    protected function purchaseExam() {
+    protected function purchaseExam()
+    {
         $post = $this->app->request->post();
-		$token = $post['stripeToken'];
+        $token = $post['stripeToken'];
         $email = $post['stripeEmail'];
         $fullLengthNumber = $post['fullLengthNumber'];
-		$promoCode = $post['promoCode'];
+        $promoCode = $post['promoCode'];
 
-		//Make sure nobody is buying an exam using the anonymous student account
-		if ($_SESSION['user_id'] == McatSection::ANONYMOUS_STUDENT_ID) {
-			$this->app->flash('message', 'You cannot puchase additional tests using this account. Lenox Hill Premedical did not process this transaction. To purchase an additional full-length MCAT, please sign out of this account and sign in with your own personal account. Thank you!<br/><br/>');
-			$this->app->redirect('/user');
-		}
-		//verfiy that the email they typed into the Stripe form is their actual user email. Will make it
-		//easier to look at charges on Stripe's console.
-		$user = $this->findById($_SESSION['user_id']);
-		if ($email !== $user->email) {//the email they typed into the Stripe form is not the same as their account email
-            $this->app->flash('message',
+        //Make sure nobody is buying an exam using the anonymous student account
+        if ($_SESSION['user_id'] == McatSection::ANONYMOUS_STUDENT_ID) {
+            $this->app->flash('message', 'You cannot puchase additional tests using this account. Lenox Hill Premedical did not process this transaction. To purchase an additional full-length MCAT, please sign out of this account and sign in with your own personal account. Thank you!<br/><br/>');
+            $this->app->redirect('/user');
+        }
+        //verfiy that the email they typed into the Stripe form is their actual user email. Will make it
+        //easier to look at charges on Stripe's console.
+        $user = $this->findById($_SESSION['user_id']);
+        if ($email !== $user->email) {//the email they typed into the Stripe form is not the same as their account email
+            $this->app->flash(
+                'message',
                 'The email you entered to purchase this exam does not match the email associated with this account.
                 For security purposes, Lenox Hill Premedical did not process this transaction. Please make sure the email
                 address you type into the purchase form is the same as the email address associated with this Lenox Hill Premedical account.<br/><br/>'
@@ -522,24 +542,24 @@ class UserController
             $this->app->redirect('/user');
         }
 
-		$amount = 5000;
+        $amount = 5000;
 
-		//If they are using a promo code, get the new price.
-		if ($promoCode != '') {
-			$sql = 'SELECT user_id, email, first_name, last_name, promo_code, promo_code_discount FROM user WHERE promo_code = :promoCode';
-			$stmt = $this->app->db->prepare($sql);
-			$stmt->execute(array(':promoCode' => $promoCode));
-			$result = $stmt->fetch(\PDO::FETCH_ASSOC);
-			if (empty($result)) {//something is severely wrong (hacked?). Someone is logged in, and has POSTED a bogus promo code.
-				$this->app->flash('message', 'Something went wrong implementing the promo code. Lenox Hill Premedical did not process this transaction. Please try or again or contact a Lenox Hill Premedical MCAT instructor.');
-				$this->app->redirect('/user');
-			} else {
-				$amount = 5000 * (100 - $result['promo_code_discount'])/100;
-				$this->sendEmailConfirmingPromoCodeUsage($result);
-			}
-		}
+        //If they are using a promo code, get the new price.
+        if ($promoCode != '') {
+            $sql = 'SELECT user_id, email, first_name, last_name, promo_code, promo_code_discount FROM user WHERE promo_code = :promoCode';
+            $stmt = $this->app->db->prepare($sql);
+            $stmt->execute(array(':promoCode' => $promoCode));
+            $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+            if (empty($result)) {//something is severely wrong (hacked?). Someone is logged in, and has POSTED a bogus promo code.
+                $this->app->flash('message', 'Something went wrong implementing the promo code. Lenox Hill Premedical did not process this transaction. Please try or again or contact a Lenox Hill Premedical MCAT instructor.');
+                $this->app->redirect('/user');
+            } else {
+                $amount = 5000 * (100 - $result['promo_code_discount'])/100;
+                $this->sendEmailConfirmingPromoCodeUsage($result);
+            }
+        }
 
-		//charge their credit card.
+        //charge their credit card.
         require_once(dirname(__DIR__).'/stripe-php-3.4.0/stripe-php-3.4.0/init.php'); //careful. This will break if directory structure changes
         \Stripe\Stripe::setApiKey($this->app->config('stripe_secret_key'));
 
@@ -551,45 +571,47 @@ class UserController
               'description' => 'Full-Length MCAT '.$fullLengthNumber,
               'receipt_email' => $email
             ));
-          } catch (\Exception $e) { // need this, otherwise using test cards will break app
+        } catch (\Exception $e) { // need this, otherwise using test cards will break app
+        }
 
-          }
-
-		//give them access to their full-length
+        //give them access to their full-length
         $userId = $_SESSION['user_id'];
         $fullLengthNumber = $post['fullLengthNumber'];
         $currentDate = new \DateTime('now', new \DateTimeZone('America/New_York'));
         $expirationDate = $currentDate->add(new \DateInterval('P91D'));
         $this->updateFullLengthExpirationDate($userId, $fullLengthNumber, $expirationDate);
 
-		//update the current_full_length field in user table;
+        //update the current_full_length field in user table;
         $this->updateCurrentFullLength($userId, $fullLengthNumber);
         $_SESSION['cfl'] = $fullLengthNumber;
 
-		$this->app->flash('message', 'Payment Received. Thank you. Good luck on your MCAT!');
+        $this->app->flash('message', 'Payment Received. Thank you. Good luck on your MCAT!');
         $this->app->redirect('/user');
     }
 
-    protected function updateFullLengthExpirationDate($userId, $fullLengthNumber, \DateTime $expDate) {
+    protected function updateFullLengthExpirationDate($userId, $fullLengthNumber, \DateTime $expDate)
+    {
         $sql = 'UPDATE full_length_access SET ExpDate = :expDate';
         $sql .= ' WHERE UserId = :userId AND FullLengthNumber = :fullLengthNumber';
-		$stmt = $this->app->db->prepare($sql);
-		$stmt->execute(
-			array(':expDate' => $expDate->format('Y-m-d H:i:s'), ':userId' => $userId, ':fullLengthNumber' => $fullLengthNumber)
-		);
+        $stmt = $this->app->db->prepare($sql);
+        $stmt->execute(
+            array(':expDate' => $expDate->format('Y-m-d H:i:s'), ':userId' => $userId, ':fullLengthNumber' => $fullLengthNumber)
+        );
     }
 
-	protected function updateCurrentFullLength($userId, $fullLengthNumber) {
+    protected function updateCurrentFullLength($userId, $fullLengthNumber)
+    {
         $sql = 'UPDATE user SET current_full_length = :currentFullLength WHERE user_id = :userId';
         $stmt = $this->app->db->prepare($sql);
         $stmt->execute(array(':currentFullLength' => $fullLengthNumber, ':userId' => $userId));
     }
 
-    protected function getExpDates($userId) {
+    protected function getExpDates($userId)
+    {
         $sql = 'SELECT FullLengthNumber, ExpDate FROM full_length_access WHERE UserId = :userId';
-		$stmt = $this->app->db->prepare($sql);
-		$stmt->execute(array(':userId' => $userId));
-		$result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $stmt = $this->app->db->prepare($sql);
+        $stmt->execute(array(':userId' => $userId));
+        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         $timeZone = new \DateTimeZone('America/New_York');
         $array = array();
         foreach ($result as $key => $value) {
@@ -598,41 +620,45 @@ class UserController
         return $array;
     }
 
-    protected function getAllExams($userId) {
+    protected function getAllExams($userId)
+    {
         $sql = 'SELECT DISTINCT exams.FullLengthNumber, ExamId, CurrentPageNumber, TimeRemaining, Status';
         $sql .= ', PageType, DATE_FORMAT(DateCreated, \'%b %d %Y at %h:%i %p\') as DateCreated, BioScore, PhysScore, PsyScore, CritScore';
         $sql .= ' FROM exams JOIN full_length_info ON (exams.CurrentPageNumber = full_length_info.PageNumber AND exams.FullLengthNumber = full_length_info.FullLengthNumber)';
         $sql .= ' WHERE UserId = :userId';
         $sql .= ' ORDER BY exams.FullLengthNumber, exams.ExamId DESC';
-		$stmt = $this->app->db->prepare($sql);
-		$stmt->execute(array(':userId' => $userId));
+        $stmt = $this->app->db->prepare($sql);
+        $stmt->execute(array(':userId' => $userId));
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    protected function findByEmail($email) {
+    protected function findByEmail($email)
+    {
         $sql = 'SELECT * FROM user WHERE email = :email';
-		$stmt = $this->app->db->prepare($sql);
-		$stmt->execute(array(':email' => $email));
-		return $stmt->fetch(\PDO::FETCH_OBJ);
-	}
-
-    protected function findById($userId) {
-        $sql = 'SELECT * FROM user WHERE user_id = :userId';
-		$stmt = $this->app->db->prepare($sql);
-		$stmt->execute(array(':userId' => $userId));
+        $stmt = $this->app->db->prepare($sql);
+        $stmt->execute(array(':email' => $email));
         return $stmt->fetch(\PDO::FETCH_OBJ);
     }
 
-    protected function sendProcessForgotRequest($userId, $email, $firstName) {
+    protected function findById($userId)
+    {
+        $sql = 'SELECT * FROM user WHERE user_id = :userId';
+        $stmt = $this->app->db->prepare($sql);
+        $stmt->execute(array(':userId' => $userId));
+        return $stmt->fetch(\PDO::FETCH_OBJ);
+    }
+
+    protected function sendProcessForgotRequest($userId, $email, $firstName)
+    {
         $sql = 'DELETE FROM user_password_reset WHERE user_id = :userId'; //Delete any old reset requests for that user.
         $stmt = $this->app->db->prepare($sql);
-		$stmt->execute(array(':userId' => $userId));
+        $stmt->execute(array(':userId' => $userId));
 
-		$now = new \DateTime('now', new \DateTimeZone('America/New_York'));
-        $requestKey = strtoupper(substr(sha1($userId . '####' . $now->getTimestamp()),0,15));
+        $now = new \DateTime('now', new \DateTimeZone('America/New_York'));
+        $requestKey = strtoupper(substr(sha1($userId . '####' . $now->getTimestamp()), 0, 15));
         $sql = 'INSERT INTO user_password_reset VALUES (:requestKey, :userId, :requestTime)';
         $stmt = $this->app->db->prepare($sql);
-		$stmt->execute(array(':requestKey' => $requestKey, ':userId' => $userId, ':requestTime' => $now->format('Y-m-d H:i:s')));
+        $stmt->execute(array(':requestKey' => $requestKey, ':userId' => $userId, ':requestTime' => $now->format('Y-m-d H:i:s')));
 
         $message = new \google\appengine\api\mail\Message();
 
@@ -641,7 +667,7 @@ class UserController
 
 You have received this email, because you initiated a password reset with Lenox Hill Premedical.';
         $textBody .= ' To Continue with the process, please click on the link https://lenox-hill-premed.appspot.com/user/reset-password?token='.$requestKey;
-		$textBody .= '
+        $textBody .= '
 
 If you did not initiate this password reset, please contact your Lenox Hill Premedical Instructor or reply to this email and let us know.
 
@@ -655,7 +681,8 @@ Happy Studying!
         $message->send();
     }
 
-    protected function grantFullLengthAccess($userId, $fullLengthNumber, \DateTime $expDate) {
+    protected function grantFullLengthAccess($userId, $fullLengthNumber, \DateTime $expDate)
+    {
         $db = $this->app->db;
         $sql = 'INSERT INTO full_length_access (UserId, FullLengthNumber, ExpDate)';
         $sql .= ' VALUES (:userId, :fullLengthNumber, :expDate)';
@@ -663,8 +690,9 @@ Happy Studying!
         $stmt->execute(array(':userId' => $userId, ':fullLengthNumber' => $fullLengthNumber, ':expDate' => $expDate->format('Y-m-d H:i:s')));
     }
 
-	 //This function is not executed anywhere in the code base. It's for future single-use cases so as to not reinvent the wheel each time.
-    protected function shuffleAnswerChoices($fullLengthNumber) {
+    //This function is not executed anywhere in the code base. It's for future single-use cases so as to not reinvent the wheel each time.
+    protected function shuffleAnswerChoices($fullLengthNumber)
+    {
         for ($i = 1; $i < 231; $i++) {
             $random = array('A', 'B', 'C', 'D');
             shuffle($random);
@@ -675,7 +703,8 @@ Happy Studying!
         }
     }
 
-	protected function processExamForStudyMode($examId, $fullLengthNumber) {
+    protected function processExamForStudyMode($examId, $fullLengthNumber)
+    {
         //update the exam: set the scores, the time remaining, and the current page to the first phys directions page.
         $sql = 'UPDATE exams SET Status = \'scored\', TimeRemaining = NULL, CurrentPageNumber = ';
         $sql .= '(SELECT PageNumber FROM full_length_info WHERE FullLengthNumber = :fullLengthNumber AND PageType = \'directions\' AND Section = \'phys\')';
@@ -684,38 +713,40 @@ Happy Studying!
         $stmt->execute(array(':examId' => $examId, ':fullLengthNumber' => $fullLengthNumber));
     }
 
-	protected function applyPromoCode($promoCode) {
-		$sql = 'SELECT user_id, email, first_name, last_name, promo_code, promo_code_discount FROM user WHERE promo_code = :promoCode';
-		$stmt = $this->app->db->prepare($sql);
-		$stmt->execute(array(':promoCode' => $promoCode));
-		$result = $stmt->fetch(\PDO::FETCH_ASSOC);
+    protected function applyPromoCode($promoCode)
+    {
+        $sql = 'SELECT user_id, email, first_name, last_name, promo_code, promo_code_discount FROM user WHERE promo_code = :promoCode';
+        $stmt = $this->app->db->prepare($sql);
+        $stmt->execute(array(':promoCode' => $promoCode));
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
         if (empty($result)) {
-			return false;
-		} else {
-			return $result;
-		}
-	}
+            return false;
+        } else {
+            return $result;
+        }
+    }
 
-	protected function sendEmailConfirmingPromoCodeUsage(array $promoCodeInfo) {
-		$emailOfPromoCodeOwner = $promoCodeInfo['email'];
-		$firstName = $promoCodeInfo['first_name'];
-		$lastName = $promoCodeInfo['last_name'];
-		$promoCode = $promoCodeInfo['promo_code'];
+    protected function sendEmailConfirmingPromoCodeUsage(array $promoCodeInfo)
+    {
+        $emailOfPromoCodeOwner = $promoCodeInfo['email'];
+        $firstName = $promoCodeInfo['first_name'];
+        $lastName = $promoCodeInfo['last_name'];
+        $promoCode = $promoCodeInfo['promo_code'];
 
-		$textBody = 'Dear '.ucfirst($firstName).',<br/><br/>';
-		$textBody .= 'Congratulations! Someone has purchased a Lenox Hill Premedical product using your promo code';
-		$textBody .= ' <strong>('.$promoCode.')</strong>. If the payment clears, you should expect to receive a check at the end of this pay cycle. You do not have to take any action. If you have any specific questions, please reply to this email. Thank you for the referral!<br/><br/>';
-		$textBody .= 'Happy Studying!<br/><br/>';
-		$textBody .= '- Lenox Hill Premedical';
-		try {
-			$message = new \google\appengine\api\mail\Message();
-			$message->setSubject('Your Lenox Hill Premedical promo code was used!');
-			$message->setSender('lenoxhillpremedical@gmail.com');
-			$message->addTo($emailOfPromoCodeOwner);
-			$message->setHtmlBody($textBody);
-			$message->send();
-		} catch (\Exception $e) {
-			return false;
-		}
-	}
+        $textBody = 'Dear '.ucfirst($firstName).',<br/><br/>';
+        $textBody .= 'Congratulations! Someone has purchased a Lenox Hill Premedical product using your promo code';
+        $textBody .= ' <strong>('.$promoCode.')</strong>. If the payment clears, you should expect to receive a check at the end of this pay cycle. You do not have to take any action. If you have any specific questions, please reply to this email. Thank you for the referral!<br/><br/>';
+        $textBody .= 'Happy Studying!<br/><br/>';
+        $textBody .= '- Lenox Hill Premedical';
+        try {
+            $message = new \google\appengine\api\mail\Message();
+            $message->setSubject('Your Lenox Hill Premedical promo code was used!');
+            $message->setSender('lenoxhillpremedical@gmail.com');
+            $message->addTo($emailOfPromoCodeOwner);
+            $message->setHtmlBody($textBody);
+            $message->send();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
