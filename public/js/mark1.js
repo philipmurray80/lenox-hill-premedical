@@ -286,19 +286,21 @@ function mcatNormalize(el) {
 //-----------------------------------------------------------------------------------------------
 
 function getPeriodicTable(url) {
-	newWindow = window.open(url, 'Periodic Table', 'height=700,width=1100');
-	if (window.focus) {newWindow.focus();}
-	return false;
+  newWindow = window.open(url, 'Periodic Table', 'height=700,width=1100');
+  if (window.focus) {
+    newWindow.focus();
+  }
+  return false;
 }
 
 function focusForMarking(question) {
-	var fieldsetArray = document.getElementsByTagName(question.tagName);
-	for (var i = 0; i < fieldsetArray.length; i++) {
-		fieldsetArray[i].style.display = 'none';
-	}
-	question.style.display = 'block';
+  var fieldsetArray = document.getElementsByTagName(question.tagName);
+  for (var i = 0; i < fieldsetArray.length; i++) {
+	   fieldsetArray[i].style.display = 'none';
+  }
+  question.style.display = 'block';
 
-	var questionNumber = question.getElementsByTagName('input')[0].name;
+  var questionNumber = question.getElementsByTagName('input')[0].name;
     var previousButton = document.getElementById('previousButton');
     if (previousButton) {//don't need to black out previous button if student is reviewing.
       previousButton.style.visibility = 'visible';
@@ -307,7 +309,7 @@ function focusForMarking(question) {
       }
     }
 
-	modifyMarkButton(question);
+  modifyMarkButton(question);
 }
 
 function modifyMarkButton(question) {
