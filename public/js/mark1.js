@@ -294,22 +294,22 @@ function getPeriodicTable(url) {
 }
 
 function focusForMarking(question) {
-  var fieldsetArray = document.getElementsByTagName(question.tagName);
-  for (var i = 0; i < fieldsetArray.length; i++) {
+	var fieldsetArray = document.getElementsByTagName(question.tagName);
+	for (var i = 0; i < fieldsetArray.length; i++) {
 	   fieldsetArray[i].style.display = 'none';
-  }
-  question.style.display = 'block';
+  	}
+	question.style.display = 'block';
 
-  var questionNumber = question.getElementsByTagName('input')[0].name;
-    var previousButton = document.getElementById('previousButton');
-    if (previousButton) {//don't need to black out previous button if student is reviewing.
-      previousButton.style.visibility = 'visible';
-      if (questionNumber == 1 || questionNumber == 60 || questionNumber == 113 || questionNumber == 172) {
-        previousButton.style.visibility = 'hidden';
-      }
-    }
+	var questionNumber = question.getElementsByTagName('input')[0].name;
+	var previousButton = document.getElementById('previousButton');
+	if (previousButton) { //don't need to black out previous button if student is reviewing.
+		previousButton.style.visibility = 'visible';
+		if (questionNumber == 1 || questionNumber == 60 || questionNumber == 113 || questionNumber == 172) {
+        		previousButton.style.visibility = 'hidden';
+		}
+    	}
 
-  modifyMarkButton(question);
+	modifyMarkButton(question);
 }
 
 function modifyMarkButton(question) {
