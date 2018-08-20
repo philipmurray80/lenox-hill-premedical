@@ -313,12 +313,12 @@ function focusForMarking(question) {
 }
 
 function modifyMarkButton(question) {
-	var itemNumber = question.getElementsByTagName('input')[1].name;
-	var markButton = document.getElementById('mark_button');
-	markButton.setAttribute('currentItem', itemNumber);
-	if (isMarked(question)) {
-		markButton.setAttribute("class", "mcat_marked_button");
-		markButton.value = "MARKED";
+  var itemNumber = question.getElementsByTagName('input')[1].name;
+  var markButton = document.getElementById('mark_button');
+  markButton.setAttribute('currentItem', itemNumber);
+  if (isMarked(question)) {
+    markButton.setAttribute("class", "mcat_marked_button");
+    markButton.value = "MARKED";
 	} else {
 		markButton.setAttribute("class", "mcat_submit_button");
 		markButton.value = 'MARK';
@@ -326,32 +326,35 @@ function modifyMarkButton(question) {
 }
 
 function isMarked(question) {
-	var inputTag = question.getElementsByTagName('input')[1];
-	if (inputTag.value.substr(1,1) == "m") {
-		return true;
+  var inputTag = question.getElementsByTagName('input')[1];
+  if (inputTag.value.substr(1,1) == "m") {
+    return true;
 	} else {
-		return false;
-	}
+    return false;
+  }
 }
 
 function clickMarkButton() {
-	var markButton = document.getElementById('mark_button');
-	var currentItem = markButton.getAttribute('currentItem');
-	var fieldsetArray = document.getElementsByTagName('fieldset');
+  var markButton = document.getElementById('mark_button');
+  var currentItem = markButton.getAttribute('currentItem');
+  var fieldsetArray = document.getElementsByTagName('fieldset');
 
-	for (var i = 0; i < fieldsetArray.length; i++) {
-		if (fieldsetArray[i].getElementsByTagName('input')[0].name == currentItem) {
-			var question = fieldsetArray[i];
-			break;
-		}
-	}
-	removeExtraField(question);
-	if (isMarked(question) == false) {
-		markItem(question);
-	} else {
+  for (var i = 0; i < fieldsetArray.length; i++) {
+    if (fieldsetArray[i].getElementsByTagName('input')[0].name == currentItem) {
+      var question = fieldsetArray[i];
+      break;
+    }
+  }
+
+  removeExtraField(question);
+
+  if (isMarked(question) == false) {
+    markItem(question);
+  } else {
 		unmarkItem(question);
 	}
-	updateExtraField(question);
+
+  updateExtraField(question);
 	modifyMarkButton(question);
 }
 
