@@ -30,7 +30,7 @@ $app = new \Slim\Slim(array(
     'log.enabled' => true
 ));
 
-/*$app->add(new \Slim\Middleware\SessionCookie(array(
+$app->add(new \Slim\Middleware\SessionCookie(array(
     'secret' => getenv('SLIM_COOKIE_SECRET'),
     'httponly' => true,
     'name' => 'lenox_hill_premedical_session',
@@ -45,7 +45,7 @@ $app->container->singleton('db', function () {
     $password = getenv('MYSQL_PASSWORD');
     $db = new \PDO($dsn, $user, $password);
     return $db;
-});*/
+});
 /**
  * Step 3: Define the Slim application routes
  *
