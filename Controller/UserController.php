@@ -660,8 +660,23 @@ class UserController
         $stmt = $this->app->db->prepare($sql);
         $stmt->execute(array(':requestKey' => $requestKey, ':userId' => $userId, ':requestTime' => $now->format('Y-m-d H:i:s')));
 
-        $message = new \google\appengine\api\mail\Message();
+        $provider = new \League\OAuth2\Client\Provider\Google([
+           'clientId' => getenv('GOOGLE_CLIENT_ID');
+           'clientSecret' => getenv('GOOGLE_CLIENT_SECRET');
+           'redirectUri' => 'https://localhost';
+        ]);
 
+        $mail = new \PhpMailer\PhpMailer\PhpMailer(true);
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'philipmurray80@gmail.com';
+        $mail->Port = 465;
+        $mail->SMTPSecure = "ssl";
+
+        $mail->setFrom('philipmurray80@gmail.com', 'Lenox Hill Premedical');
+        $mail->addAddress($email);
+        $mail->Subject = 'Lenox Hill Premedical Password Reset';
 
         $textBody = 'Dear '.ucfirst($firstName).',
 
@@ -674,11 +689,15 @@ If you did not initiate this password reset, please contact your Lenox Hill Prem
 Happy Studying!
 
 -Lenox Hill Premedical';
-        $message->setSubject('Lenox Hill Premedical Password Reset');
-        $message->setSender('lenoxhillpremedical@gmail.com');
-        $message->addTo($email);
-        $message->setTextBody($textBody);
-        $message->send();
+        $mail->Body = $textBody;
+        $mail->send()
+        $mail->smtpClose();
+
+//         $message->setSubject('Lenox Hill Premedical Password Reset');
+//         $message->setSender('lenoxhillpremedical@gmail.com');
+//         $message->addTo($email);
+//         $message->setTextBody($textBody);
+//         $message->send();
     }
 
     protected function grantFullLengthAccess($userId, $fullLengthNumber, \DateTime $expDate)
