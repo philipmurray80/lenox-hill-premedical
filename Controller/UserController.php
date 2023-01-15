@@ -661,9 +661,9 @@ class UserController
         $stmt->execute(array(':requestKey' => $requestKey, ':userId' => $userId, ':requestTime' => $now->format('Y-m-d H:i:s')));
 
         $provider = new \League\OAuth2\Client\Provider\Google([
-           'clientId' => getenv('GOOGLE_CLIENT_ID');
-           'clientSecret' => getenv('GOOGLE_CLIENT_SECRET');
-           'redirectUri' => 'https://localhost';
+           'clientId' => getenv('GOOGLE_CLIENT_ID'),
+           'clientSecret' => getenv('GOOGLE_CLIENT_SECRET'),
+           'redirectUri' => 'https://localhost'
         ]);
 
         $mail = new \PhpMailer\PhpMailer\PhpMailer(true);
