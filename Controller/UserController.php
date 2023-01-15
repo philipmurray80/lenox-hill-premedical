@@ -661,12 +661,6 @@ class UserController
         $stmt = $this->app->db->prepare($sql);
         $stmt->execute(array(':requestKey' => $requestKey, ':userId' => $userId, ':requestTime' => $now->format('Y-m-d H:i:s')));
 
-        $provider = new \League\OAuth2\Client\Provider\Google([
-           'clientId' => getenv('GOOGLE_CLIENT_ID'),
-           'clientSecret' => getenv('GOOGLE_CLIENT_SECRET'),
-           'redirectUri' => 'https://localhost'
-        ]);
-
         $mail = new \PhpMailer\PhpMailer\PhpMailer(true);
         $mail->isSMTP();
         $mail->Mailer = 'smtp.gmail.com';
