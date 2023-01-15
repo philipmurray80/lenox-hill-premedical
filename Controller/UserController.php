@@ -690,7 +690,7 @@ Happy Studying!
 
 -Lenox Hill Premedical';
         $mail->Body = $textBody;
-        $mail->send()
+        $mail->send();
         $mail->smtpClose();
 
 //         $message->setSubject('Lenox Hill Premedical Password Reset');
