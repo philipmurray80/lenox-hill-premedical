@@ -650,6 +650,7 @@ class UserController
 
     protected function sendProcessForgotRequest($userId, $email, $firstName)
     {
+        echo 'Hello World';
         $sql = 'DELETE FROM user_password_reset WHERE user_id = :userId'; //Delete any old reset requests for that user.
         $stmt = $this->app->db->prepare($sql);
         $stmt->execute(array(':userId' => $userId));
@@ -694,6 +695,7 @@ Happy Studying!
         $mail->send();
         $mail->smtpClose();
 
+        echo 'Hello Friendly World';
 //         $message->setSubject('Lenox Hill Premedical Password Reset');
 //         $message->setSender('lenoxhillpremedical@gmail.com');
 //         $message->addTo($email);
