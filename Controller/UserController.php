@@ -669,14 +669,15 @@ class UserController
 
         $mail = new \PhpMailer\PhpMailer\PhpMailer(true);
         $mail->isSMTP();
+        $mail->Mailer = 'smtp.gmail.com';
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
         $mail->Username = 'philipmurray80@gmail.com';
         $mail->Password = getenv('GOOGLE_APP_PASSWORD');
-        $mail->Port = 465;
-        $mail->SMTPSecure = "ssl";
+        $mail->Port = 587;
+        $mail->SMTPSecure = 'tls';
 
-        $mail->setFrom('philipmurray80@gmail.com', 'Lenox Hill Premedical');
+        $mail->setFrom('philipmurray80@gmail.com');
         $mail->addAddress($email);
         $mail->Subject = 'Lenox Hill Premedical Password Reset';
 
