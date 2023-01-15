@@ -671,6 +671,7 @@ class UserController
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
         $mail->Username = 'philipmurray80@gmail.com';
+        $mail->Password = getenv('GOOGLE_APP_PASSWORD');
         $mail->Port = 465;
         $mail->SMTPSecure = "ssl";
 
