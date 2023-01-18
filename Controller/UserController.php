@@ -650,7 +650,6 @@ class UserController
 
     protected function sendProcessForgotRequest($userId, $email, $firstName)
     {
-        echo 'Hello World';
         $sql = 'DELETE FROM user_password_reset WHERE user_id = :userId'; //Delete any old reset requests for that user.
         $stmt = $this->app->db->prepare($sql);
         $stmt->execute(array(':userId' => $userId));
@@ -661,19 +660,8 @@ class UserController
         $stmt = $this->app->db->prepare($sql);
         $stmt->execute(array(':requestKey' => $requestKey, ':userId' => $userId, ':requestTime' => $now->format('Y-m-d H:i:s')));
 
-        $mail = new \PhpMailer\PhpMailer\PhpMailer(true);
-        $mail->isSMTP();
-        $mail->Mailer = 'smtp.gmail.com';
-        $mail->Host = 'smtp.gmail.com';
-        $mail->SMTPAuth = true;
-        $mail->Username = 'philipmurray80@gmail.com';
-        $mail->Password = getenv('GOOGLE_APP_PASSWORD');
-        $mail->Port = 587;
-        $mail->SMTPSecure = 'tls';
+        $message = new \google\appengine\api\mail\Message();
 
-        $mail->setFrom('philipmurray80@gmail.com');
-        $mail->addAddress($email);
-        $mail->Subject = 'Lenox Hill Premedical Password Reset';
 
         $textBody = 'Dear '.ucfirst($firstName).',
 
@@ -686,16 +674,11 @@ If you did not initiate this password reset, please contact your Lenox Hill Prem
 Happy Studying!
 
 -Lenox Hill Premedical';
-        $mail->Body = $textBody;
-        $mail->send();
-        $mail->smtpClose();
-
-        echo 'Hello Friendly World';
-//         $message->setSubject('Lenox Hill Premedical Password Reset');
-//         $message->setSender('lenoxhillpremedical@gmail.com');
-//         $message->addTo($email);
-//         $message->setTextBody($textBody);
-//         $message->send();
+        $message->setSubject('Lenox Hill Premedical Password Reset');
+        $message->setSender('lenoxhillpremedical@gmail.com');
+        $message->addTo($email);
+        $message->setTextBody($textBody);
+        $message->send();
     }
 
     protected function grantFullLengthAccess($userId, $fullLengthNumber, \DateTime $expDate)
