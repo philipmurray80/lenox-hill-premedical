@@ -1,5 +1,7 @@
 <?php
-require __DIR__.'/vendor/autoload.php';
+use Http\Adapter\Guzzle6\Client;
+
+require 'vendor/autoload.php';
 
 $adapter = new Http\Adapter\Guzzle6\Client();
 $mailer = new Stampie\Mailer\SendGrid($adapter, 'philipmurray80:helloworld');
