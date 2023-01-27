@@ -696,7 +696,7 @@ Happy Studying!
             $mail->Subject = "Lenox Hill Premedical Password Reset";
             $mail->Body = $textBody;
 
-            $mail->setFrom(getenv('EMAIL_USERNAME');
+            $mail->setFrom(getenv('EMAIL_USERNAME'));
             $mail->addAddress($email, ucfirst($firstName));
             $mail->send();
             echo "Email message sent!";
