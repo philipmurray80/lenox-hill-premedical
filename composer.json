@@ -1,7 +1,5 @@
 {
-    "require": {
-        "stampie/stampie": "^1.1",
-        "php-http/curl-client": "^2.2",
-        "nyholm/psr7": "^1.5"
-    }
+  "require": {
+    "phpmailer/phpmailer": "^6.7"
+  }
 }
