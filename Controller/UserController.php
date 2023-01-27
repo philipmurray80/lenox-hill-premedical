@@ -264,11 +264,13 @@ class UserController
         if ($this->app->request()->isPost()) {
             $email = $this->app->request->post('email');
             $email = filter_var($email, FILTER_VALIDATE_EMAIL); //will return false if it's not a valid email address
-
+            echo "Mark1";
             if ($email) {
+                echo "Mark2";
                 $user = $this->findByEmail($email);
-
+                echo "Mark3";
                 if ($user) {
+                    echo "Mark4";
                     $this->sendProcessForgotRequest((int) $user->user_id, $email, $user->first_name);
                 }
 
@@ -654,6 +656,7 @@ class UserController
 
     protected function sendProcessForgotRequest($userId, $email, $firstName)
     {
+        echo "I am in sendProcessForgotRequest Yoda Soda";
         $sql = 'DELETE FROM user_password_reset WHERE user_id = :userId'; //Delete any old reset requests for that user.
         $stmt = $this->app->db->prepare($sql);
         $stmt->execute(array(':userId' => $userId));
