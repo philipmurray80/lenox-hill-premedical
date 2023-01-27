@@ -268,7 +268,8 @@ class UserController
             if ($email) {
                 echo "Mark2";
                 $user = $this->findByEmail($email);
-                echo "Mark3";
+                echo "Mark3...";
+                echo $email;
                 if ($user) {
                     echo "Mark4";
                     $this->sendProcessForgotRequest((int) $user->user_id, $email, $user->first_name);
