@@ -664,19 +664,18 @@ class UserController
 
 
 
-//         $textBody = 'Dear '.ucfirst($firstName).',
-//
-// You have received this email, because you initiated a password reset with Lenox Hill Premedical.';
-//         $textBody .= ' To Continue with the process, please click on the link https://lenoxhillpremedical.com/user/reset-password?token='.$requestKey;
-//         $textBody .= '
-//
-// If you did not initiate this password reset, please contact your Lenox Hill Premedical Instructor or reply to this email and let us know.
-//
-// Happy Studying!
-//
-// -Lenox Hill Premedical';
+        $textBody = 'Dear '.ucfirst($firstName).',
 
-        $textBody = 'bar';
+You have received this email, because you initiated a password reset with Lenox Hill Premedical.';
+        $textBody .= ' To Continue with the process, please click on the link https://lenoxhillpremedical.com/user/reset-password?token='.$requestKey;
+        $textBody .= '
+
+If you did not initiate this password reset, please contact your Lenox Hill Premedical Instructor or reply to this email and let us know.
+
+Happy Studying!
+
+-Lenox Hill Premedical';
+
 
         $mail = new PHPMailer(true);
         try {
