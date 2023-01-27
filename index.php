@@ -40,7 +40,7 @@ $app->add(new \Slim\Middleware\SessionCookie(array(
 
 //Phil - Register PDO factory
 $app->container->singleton('db', function () {
-    $dsn = getenv('MYSQL_DSN');
+    $dsn = 'mysql:host=' . getenv('MYSQL_HOST') . ';dbname=' . getenv('MYSQL_DBNAME');
     $user = getenv('MYSQL_USER');
     $password = getenv('MYSQL_PASSWORD');
     $db = new \PDO($dsn, $user, $password);
