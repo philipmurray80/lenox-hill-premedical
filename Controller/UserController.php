@@ -637,10 +637,8 @@ class UserController
     protected function findByEmail($email)
     {
         $sql = 'SELECT * FROM user WHERE email = :email';
-        echo $sql;
         $stmt = $this->app->db->prepare($sql);
         $stmt->execute(array(':email' => $email));
-        echo $stmt->fetch(\PDO::FETCH_OBJ);
         return $stmt->fetch(\PDO::FETCH_OBJ);
     }
 
