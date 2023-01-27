@@ -3,6 +3,11 @@ namespace Controller;
 
 use Slim\Slim;
 use Model\McatSection;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+require __DIR__ . '/vendor/autoload.php';
 
 class UserController
 {
@@ -660,13 +665,12 @@ class UserController
         $stmt = $this->app->db->prepare($sql);
         $stmt->execute(array(':requestKey' => $requestKey, ':userId' => $userId, ':requestTime' => $now->format('Y-m-d H:i:s')));
 
-        $message = new \google\appengine\api\mail\Message();
 
 
         $textBody = 'Dear '.ucfirst($firstName).',
 
 You have received this email, because you initiated a password reset with Lenox Hill Premedical.';
-        $textBody .= ' To Continue with the process, please click on the link https://lenox-hill-premed.appspot.com/user/reset-password?token='.$requestKey;
+        $textBody .= ' To Continue with the process, please click on the link https://lenoxhillpremedical.com/user/reset-password?token='.$requestKey;
         $textBody .= '
 
 If you did not initiate this password reset, please contact your Lenox Hill Premedical Instructor or reply to this email and let us know.
@@ -678,7 +682,27 @@ Happy Studying!
         $message->setSender('lenoxhillpremedical@gmail.com');
         $message->addTo($email);
         $message->setTextBody($textBody);
-        $message->send();
+//         $message->send();
+
+        $mail = new PHPMailer(true);
+        try {
+            $mail->isSMTP();
+            $mail->Host = 'smtp.gmail.com';
+            $mail->SMTPAuth = true;
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port = 587;
+            $mail->Username = getenv('EMAIL_USERNAME');
+            $mail->Password = getenv('EMAIL_PASSWORD');
+            $mail->Subject = "Lenox Hill Premedical Password Reset";
+            $mail->Body = $textBody;
+
+            $mail->setFrom(getenv('EMAIL_USERNAME');
+            $mail->addAddress($email, ucfirst($firstName));
+            $mail->send();
+            echo "Email message sent!";
+        } catch (Exception $e) {
+            echo "Error in sending email. Mailer error: {$mail->ErrorInfo}";
+        }
     }
 
     protected function grantFullLengthAccess($userId, $fullLengthNumber, \DateTime $expDate)
