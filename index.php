@@ -8,6 +8,7 @@
  * If you are using Composer, you can skip this step.
  */
 require 'Slim/Slim.php';
+require __DIR__ . '/vendor/autoload.php';
 
 \Slim\Slim::registerAutoloader();
 
