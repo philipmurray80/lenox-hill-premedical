@@ -652,7 +652,6 @@ class UserController
 
     protected function sendProcessForgotRequest($userId, $email, $firstName)
     {
-        echo "I am in sendProcessForgotRequest Yoda Soda";
         $sql = 'DELETE FROM user_password_reset WHERE user_id = :userId'; //Delete any old reset requests for that user.
         $stmt = $this->app->db->prepare($sql);
         $stmt->execute(array(':userId' => $userId));
@@ -677,7 +676,7 @@ class UserController
 //
 // -Lenox Hill Premedical';
 
-        $textBody = 'foo';
+        $textBody = 'bar';
 
         $mail = new PHPMailer(true);
         try {
@@ -694,7 +693,6 @@ class UserController
             $mail->setFrom(getenv('EMAIL_USERNAME'));
             $mail->addAddress($email, ucfirst($firstName));
             $mail->send();
-            echo "Email message sent!";
         } catch (Exception $e) {
             echo "Error in sending email. Mailer error: {$mail->ErrorInfo}";
         }
