@@ -264,14 +264,9 @@ class UserController
         if ($this->app->request()->isPost()) {
             $email = $this->app->request->post('email');
             $email = filter_var($email, FILTER_VALIDATE_EMAIL); //will return false if it's not a valid email address
-            echo "Mark1";
             if ($email) {
-                echo "Mark2";
                 $user = $this->findByEmail($email);
-                echo "Mark3...";
-                echo $email;
                 if ($user) {
-                    echo "Mark4";
                     $this->sendProcessForgotRequest((int) $user->user_id, $email, $user->first_name);
                 }
 
