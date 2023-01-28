@@ -267,16 +267,16 @@ $app->map(
             $stmt->execute(array(':fullLengthNumber' => $fullLengthNumber, ':userId' => $_SESSION['user_id']));
             $_SESSION['cfl'] = $fullLengthNumber;
         }
-        echo 'Yoda Soda 2';
-//
-//         //Inject the proctor controller with its parameters.
-//         $controller = new Controller\ProctorController();
-//         $controller->setApp($app);
-//         $controller->examId = $examId;
-//         $controller->fullLengthNumber = $fullLengthNumber;
-//         $controller->pageNumber = $pageNumber;
-//         $controller->status = $status;
-//         $controller->dispatchAction($pageType);
+        echo 'Yoda Soda 2a';
+
+        //Inject the proctor controller with its parameters.
+        $controller = new Controller\ProctorController();
+        $controller->setApp($app);
+        $controller->examId = $examId;
+        $controller->fullLengthNumber = $fullLengthNumber;
+        $controller->pageNumber = $pageNumber;
+        $controller->status = $status;
+        $controller->dispatchAction($pageType);
     }
 )->via('GET', 'POST');
 
