@@ -240,7 +240,7 @@ class ProctorController
                 'currentSection' => $firstPage['Section'],
                 'previous' => $previous,
                 'passage' => $passage,
-                'annotationCount' => $annotationCount,
+                //'annotationCount' => $annotationCount,
                 'timeRemaining' => $timeRemaining,
                 'paginationArray' => $paginationArray,
                 'examId' => $this->examId,
