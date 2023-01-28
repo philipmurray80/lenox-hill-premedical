@@ -207,66 +207,66 @@ $app->map(
        }
 
         //Make sure this exam belongs to the user and retrieve its status.
-//         $sql = 'SELECT Status FROM exams WHERE ExamId = :examId AND UserId = :userId';
-//         $stmt = $app->db->prepare($sql);
-//         $stmt->execute(array(':examId' => $examId, ':userId' => $_SESSION['user_id']));
-//         $result = $stmt->fetch(\PDO::FETCH_ASSOC);
-//
-//         if ($result === false) {//user using someone else's exam
-//             unset($_SESSION);
-//             $app->redirect('/');
-//         }
-//         $status = $result['Status'];
-//
-//         //Make sure the exam has not expired.
-//         $sql = 'SELECT ExpDate FROM full_length_access WHERE UserId = :userId AND FullLengthNumber = :fullLengthNumber';
-//         $stmt = $app->db->prepare($sql);
-//         $stmt->execute(array(':userId' => $_SESSION['user_id'], ':fullLengthNumber' => $fullLengthNumber));
-//         $result = $stmt->fetch(\PDO::FETCH_ASSOC);
-//         $now = new \DateTime('now', new DateTimeZone('America/New_York'));
-//         if ($result['ExpDate'] < $now->format('Y-m-d H:i:s')) { //Exam has expired. Redirect them to user homepage.
-//             $app->redirect('/user');
-//         }
-//
-//         //If the exam has not yet been completed, determine if they are making an allowed page turn;
-//         if ($status == 'incomplete') {
-//             $sql = 'SELECT CurrentPageNumber FROM exams WHERE ExamId = :examId';
-//             $stmt = $app->db->prepare($sql);
-//             $stmt->execute(array(':examId' => $examId));
-//             $currentPageNumber = (int) $stmt->fetch(\PDO::FETCH_ASSOC)['CurrentPageNumber'];
-//             if ($pageNumber < $currentPageNumber) {//They're trying to access an earlier page
-//                 $sql = 'SELECT PageType, Section FROM full_length_info WHERE FullLengthNumber = :fullLengthNumber AND PageNumber = :currentPageNumber ';
-//                 $sql .= 'UNION SELECT PageType, Section FROM full_length_info WHERE FullLengthNumber = :fullLengthNumber AND PageNumber = :pageNumber';
-//                 $stmt = $app->db->prepare($sql);
-//                 $stmt->execute(array(':fullLengthNumber' => $fullLengthNumber,':currentPageNumber' => $currentPageNumber, ':pageNumber' => $pageNumber));
-//                 $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-//                 if (count($result) != 1) {//The page they're trying to access does not have same pageType and Section as the page they're currently on.
-//                     if (!($result[0]['PageType'] == 'review' && ($result[0]['Section'] == $result[1]['Section']))) {
-//                         //They're trying to access a previous exam page that they're not supposed to. Nothing malicious here. They might have just clicked the back button.
-//                         //Redirect them to the page they were just on.
-//                         $app->redirect('/full-length/'.$result[0]['PageType'].'-page/'.$examId.'/'.$fullLengthNumber.'/'.$currentPageNumber);
-//                     }
-//                 }
-//             }
-//             $app->view->setLayout('full-length-layout.phtml');
-//         } elseif ($status == 'scored' && $pageType == 'finish-page') {//this path will be taken only after void page scores exam and redirects to finish page.
-//             $app->view->setLayout('full-length-layout.phtml');
-//         } else {
-//             //Make sure the only pagetypes they can access are content, directions, and review.
-//             if (!in_array($pageType, array('review-content-page', 'review-directions-page', 'review-review-page'))) {
-//                 unset($_SESSION);
-//                 $app->redirect('/');
-//             }
-//             $app->view->setLayout('full-length-review-layout.phtml');
-//         }
-//
-//         // Check to see if you need to update their current_full_length status
-//         if ($_SESSION['cfl'] != $fullLengthNumber) {
-//             $sql = 'UPDATE user SET current_full_length = :fullLengthNumber WHERE user_id = :userId';
-//             $stmt = $app->db->prepare($sql);
-//             $stmt->execute(array(':fullLengthNumber' => $fullLengthNumber, ':userId' => $_SESSION['user_id']));
-//             $_SESSION['cfl'] = $fullLengthNumber;
-//         }
+        $sql = 'SELECT Status FROM exams WHERE ExamId = :examId AND UserId = :userId';
+        $stmt = $app->db->prepare($sql);
+        $stmt->execute(array(':examId' => $examId, ':userId' => $_SESSION['user_id']));
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if ($result === false) {//user using someone else's exam
+            unset($_SESSION);
+            $app->redirect('/');
+        }
+        $status = $result['Status'];
+
+        //Make sure the exam has not expired.
+        $sql = 'SELECT ExpDate FROM full_length_access WHERE UserId = :userId AND FullLengthNumber = :fullLengthNumber';
+        $stmt = $app->db->prepare($sql);
+        $stmt->execute(array(':userId' => $_SESSION['user_id'], ':fullLengthNumber' => $fullLengthNumber));
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+        $now = new \DateTime('now', new DateTimeZone('America/New_York'));
+        if ($result['ExpDate'] < $now->format('Y-m-d H:i:s')) { //Exam has expired. Redirect them to user homepage.
+            $app->redirect('/user');
+        }
+
+        //If the exam has not yet been completed, determine if they are making an allowed page turn;
+        if ($status == 'incomplete') {
+            $sql = 'SELECT CurrentPageNumber FROM exams WHERE ExamId = :examId';
+            $stmt = $app->db->prepare($sql);
+            $stmt->execute(array(':examId' => $examId));
+            $currentPageNumber = (int) $stmt->fetch(\PDO::FETCH_ASSOC)['CurrentPageNumber'];
+            if ($pageNumber < $currentPageNumber) {//They're trying to access an earlier page
+                $sql = 'SELECT PageType, Section FROM full_length_info WHERE FullLengthNumber = :fullLengthNumber AND PageNumber = :currentPageNumber ';
+                $sql .= 'UNION SELECT PageType, Section FROM full_length_info WHERE FullLengthNumber = :fullLengthNumber AND PageNumber = :pageNumber';
+                $stmt = $app->db->prepare($sql);
+                $stmt->execute(array(':fullLengthNumber' => $fullLengthNumber,':currentPageNumber' => $currentPageNumber, ':pageNumber' => $pageNumber));
+                $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+                if (count($result) != 1) {//The page they're trying to access does not have same pageType and Section as the page they're currently on.
+                    if (!($result[0]['PageType'] == 'review' && ($result[0]['Section'] == $result[1]['Section']))) {
+                        //They're trying to access a previous exam page that they're not supposed to. Nothing malicious here. They might have just clicked the back button.
+                        //Redirect them to the page they were just on.
+                        $app->redirect('/full-length/'.$result[0]['PageType'].'-page/'.$examId.'/'.$fullLengthNumber.'/'.$currentPageNumber);
+                    }
+                }
+            }
+            $app->view->setLayout('full-length-layout.phtml');
+        } elseif ($status == 'scored' && $pageType == 'finish-page') {//this path will be taken only after void page scores exam and redirects to finish page.
+            $app->view->setLayout('full-length-layout.phtml');
+        } else {
+            //Make sure the only pagetypes they can access are content, directions, and review.
+            if (!in_array($pageType, array('review-content-page', 'review-directions-page', 'review-review-page'))) {
+                unset($_SESSION);
+                $app->redirect('/');
+            }
+            $app->view->setLayout('full-length-review-layout.phtml');
+        }
+
+        // Check to see if you need to update their current_full_length status
+        if ($_SESSION['cfl'] != $fullLengthNumber) {
+            $sql = 'UPDATE user SET current_full_length = :fullLengthNumber WHERE user_id = :userId';
+            $stmt = $app->db->prepare($sql);
+            $stmt->execute(array(':fullLengthNumber' => $fullLengthNumber, ':userId' => $_SESSION['user_id']));
+            $_SESSION['cfl'] = $fullLengthNumber;
+        }
 //
 //         //Inject the proctor controller with its parameters.
 //         $controller = new Controller\ProctorController();
