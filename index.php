@@ -159,7 +159,7 @@ $app->map(
         }
     },
     function ($pageType, $examId, $fullLengthNumber, $pageNumber) use ($app) {
-        echo 'hello yoda soda';
+
         //Validate that query parameters are all integers.
         $examId = filter_var($examId, FILTER_VALIDATE_INT);
         $fullLengthNumber = filter_var($fullLengthNumber, FILTER_VALIDATE_INT, array('options' => array('min_range' => 1, 'max_range' => 5)));
@@ -204,7 +204,7 @@ $app->map(
                     }
                 }
             }
-       }
+        }
 
         //Make sure this exam belongs to the user and retrieve its status.
         $sql = 'SELECT Status FROM exams WHERE ExamId = :examId AND UserId = :userId';
@@ -267,7 +267,6 @@ $app->map(
             $stmt->execute(array(':fullLengthNumber' => $fullLengthNumber, ':userId' => $_SESSION['user_id']));
             $_SESSION['cfl'] = $fullLengthNumber;
         }
-        echo 'Yoda Soda 2c';
 
         //Inject the proctor controller with its parameters.
         $controller = new Controller\ProctorController();

@@ -5,6 +5,7 @@ use Slim\Slim;
 use Model\McatSection;
 use Model\McatItem;
 
+//use google\appengine\api\cloud_storage\CloudStorageTools;
 
 
 class ProctorController
@@ -189,9 +190,7 @@ class ProctorController
 
     public function contentPageAction()
     {
-        echo 'how about now?';
         if ($this->app->request->isPost()) {
-                echo 'hello friendly world';
             $post = $this->app->request->post();
             $answers = array();
             //validate submitted answers and build answer array
@@ -223,26 +222,26 @@ class ProctorController
             $redirectString .= $this->fullLengthNumber . '/' . $newPageArray['PageNumber'] . (isset($post['previous']) ? '?p' : '');
             $this->app->redirect($redirectString);
         }
-        echo 'I need another booster3';
+
         $firstPage = $this->findFirstPageOfSection();
         $previous = (isset($_GET['p'])) ? true : false;
         $timeRemaining = $this->getTimeRemaining();
-//         $x = $this->retrieveAnnotations();
-//         $annotationCount = $x['AnnotationCount'];
-//        $passage = ($x['AnnotationCount'] == 0) ? $this->retrievePassage() : $x['Annotation'];
+        $x = $this->retrieveAnnotations();
+        $annotationCount = $x['AnnotationCount'];
+        $passage = ($x['AnnotationCount'] == 0) ? $this->retrievePassage() : $x['Annotation'];
         $items = $this->retrieveItems();
         $paginationArray = $this->getContentPaginationArray();
-        echo 'Doing something hero now';
+
         $this->app->render(
             'content-page.phtml',
             array(
-                //'items' => $items,
-                //'currentSection' => $firstPage['Section'],
-                //'previous' => $previous,
-                //'passage' => $passage,
-                //'annotationCount' => $annotationCount,
-                //'timeRemaining' => $timeRemaining,
-                //'paginationArray' => $paginationArray,
+                'items' => $items,
+                'currentSection' => $firstPage['Section'],
+                'previous' => $previous,
+                'passage' => $passage,
+                'annotationCount' => $annotationCount,
+                'timeRemaining' => $timeRemaining,
+                'paginationArray' => $paginationArray,
                 'examId' => $this->examId,
                 'fullLengthNumber' => $this->fullLengthNumber,
                 'pageNumber' => $this->pageNumber
