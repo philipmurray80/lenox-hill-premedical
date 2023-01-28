@@ -223,15 +223,16 @@ class ProctorController
 //             $redirectString .= $this->fullLengthNumber . '/' . $newPageArray['PageNumber'] . (isset($post['previous']) ? '?p' : '');
 //             $this->app->redirect($redirectString);
         }
-        echo 'I need another booster';
-//         $firstPage = $this->findFirstPageOfSection();
-//         $previous = (isset($_GET['p'])) ? true : false;
-//         $timeRemaining = $this->getTimeRemaining();
-//         $x = $this->retrieveAnnotations();
-//         $annotationCount = $x['AnnotationCount'];
-//         $passage = ($x['AnnotationCount'] == 0) ? $this->retrievePassage() : $x['Annotation'];
-//         $items = $this->retrieveItems();
-//         $paginationArray = $this->getContentPaginationArray();
+        echo 'I need another booster2';
+        $firstPage = $this->findFirstPageOfSection();
+        $previous = (isset($_GET['p'])) ? true : false;
+        $timeRemaining = $this->getTimeRemaining();
+        $x = $this->retrieveAnnotations();
+        $annotationCount = $x['AnnotationCount'];
+        $passage = ($x['AnnotationCount'] == 0) ? $this->retrievePassage() : $x['Annotation'];
+        $items = $this->retrieveItems();
+        $paginationArray = $this->getContentPaginationArray();
+        echo 'Doing something cool now';
 //         $this->app->render(
 //             'content-page.phtml',
 //             array(
