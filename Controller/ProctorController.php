@@ -229,7 +229,7 @@ class ProctorController
         $timeRemaining = $this->getTimeRemaining();
 //         $x = $this->retrieveAnnotations();
 //         $annotationCount = $x['AnnotationCount'];
-        $passage = ($x['AnnotationCount'] == 0) ? $this->retrievePassage() : $x['Annotation'];
+//        $passage = ($x['AnnotationCount'] == 0) ? $this->retrievePassage() : $x['Annotation'];
         $items = $this->retrieveItems();
         $paginationArray = $this->getContentPaginationArray();
         echo 'Doing something hero now';
