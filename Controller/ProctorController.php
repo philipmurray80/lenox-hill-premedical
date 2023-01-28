@@ -5,7 +5,6 @@ use Slim\Slim;
 use Model\McatSection;
 use Model\McatItem;
 
-//use google\appengine\api\cloud_storage\CloudStorageTools;
 
 
 class ProctorController
@@ -190,6 +189,7 @@ class ProctorController
 
     public function contentPageAction()
     {
+        echo 'how about now?';
         if ($this->app->request->isPost()) {
                 echo 'hello friendly world';
 //             $post = $this->app->request->post();

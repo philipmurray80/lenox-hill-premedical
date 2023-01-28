@@ -267,7 +267,7 @@ $app->map(
             $stmt->execute(array(':fullLengthNumber' => $fullLengthNumber, ':userId' => $_SESSION['user_id']));
             $_SESSION['cfl'] = $fullLengthNumber;
         }
-        echo 'Yoda Soda 2a';
+        echo 'Yoda Soda 2c';
 
         //Inject the proctor controller with its parameters.
         $controller = new Controller\ProctorController();
