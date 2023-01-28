@@ -223,7 +223,7 @@ class ProctorController
 //             $redirectString .= $this->fullLengthNumber . '/' . $newPageArray['PageNumber'] . (isset($post['previous']) ? '?p' : '');
 //             $this->app->redirect($redirectString);
         }
-//
+        echo 'I need another booster';
 //         $firstPage = $this->findFirstPageOfSection();
 //         $previous = (isset($_GET['p'])) ? true : false;
 //         $timeRemaining = $this->getTimeRemaining();
