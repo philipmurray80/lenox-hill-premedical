@@ -231,22 +231,22 @@ class ProctorController
         $passage = ($x['AnnotationCount'] == 0) ? $this->retrievePassage() : $x['Annotation'];
         $items = $this->retrieveItems();
         $paginationArray = $this->getContentPaginationArray();
-
-        $this->app->render(
-            'content-page.phtml',
-            array(
-                'items' => $items,
-                'currentSection' => $firstPage['Section'],
-                'previous' => $previous,
-                'passage' => $passage,
-                'annotationCount' => $annotationCount,
-                'timeRemaining' => $timeRemaining,
-                'paginationArray' => $paginationArray,
-                'examId' => $this->examId,
-                'fullLengthNumber' => $this->fullLengthNumber,
-                'pageNumber' => $this->pageNumber
-            )
-        );
+        echo 'hello friendly world';
+//         $this->app->render(
+//             'content-page.phtml',
+//             array(
+//                 'items' => $items,
+//                 'currentSection' => $firstPage['Section'],
+//                 'previous' => $previous,
+//                 'passage' => $passage,
+//                 'annotationCount' => $annotationCount,
+//                 'timeRemaining' => $timeRemaining,
+//                 'paginationArray' => $paginationArray,
+//                 'examId' => $this->examId,
+//                 'fullLengthNumber' => $this->fullLengthNumber,
+//                 'pageNumber' => $this->pageNumber
+//             )
+//         );
     }
 
     public function reviewPageAction()
