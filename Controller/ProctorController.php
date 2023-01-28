@@ -191,47 +191,47 @@ class ProctorController
     public function contentPageAction()
     {
         if ($this->app->request->isPost()) {
-            $post = $this->app->request->post();
-            $answers = array();
-            //validate submitted answers and build answer array
-            foreach ($post as $key => $value) {
-                if (is_int($key)) {
-                    //Protect against sql injection, white list
-                    if (!in_array($value, array('A', 'B', 'C', 'D', 'Am', 'Bm', 'Cm', 'Dm', 'm', 'null'))) {
-                        unset($_SESSION);
-                        $this->app->redirect('/');
-                    }
-                    $answers[$key] = $value;
-                }
-            }
-
-            //save submitted answers
-            if (!empty($answers)) {
-                $this->saveAnswers($answers);
-            }
-
-            //save annotations
-            if ($post['annotationChanged'] == 'TRUE') {//they highlighted (or unhighlighted) something
-                $this->saveAnnotation($post['annotation'], $post['annotationCount']);
-            }
-
-            $newPageArray = $this->getNewPageArray($post);
-            $timeRemaining = (!$newPageArray['IsNewSection']) ? $post['timeRemaining'] : McatSection::getSectionTime($newPageArray['PageType'], $newPageArray['Section']);
-            $this->updateExamState($timeRemaining, $newPageArray['PageNumber']);
-            $redirectString = '/full-length/' . $newPageArray['PageType'] . '-page/' . $this->examId . '/';
-            $redirectString .= $this->fullLengthNumber . '/' . $newPageArray['PageNumber'] . (isset($post['previous']) ? '?p' : '');
-            $this->app->redirect($redirectString);
+                echo 'hello friendly world';
+//             $post = $this->app->request->post();
+//             $answers = array();
+//             //validate submitted answers and build answer array
+//             foreach ($post as $key => $value) {
+//                 if (is_int($key)) {
+//                     //Protect against sql injection, white list
+//                     if (!in_array($value, array('A', 'B', 'C', 'D', 'Am', 'Bm', 'Cm', 'Dm', 'm', 'null'))) {
+//                         unset($_SESSION);
+//                         $this->app->redirect('/');
+//                     }
+//                     $answers[$key] = $value;
+//                 }
+//             }
+//
+//             //save submitted answers
+//             if (!empty($answers)) {
+//                 $this->saveAnswers($answers);
+//             }
+//
+//             //save annotations
+//             if ($post['annotationChanged'] == 'TRUE') {//they highlighted (or unhighlighted) something
+//                 $this->saveAnnotation($post['annotation'], $post['annotationCount']);
+//             }
+//
+//             $newPageArray = $this->getNewPageArray($post);
+//             $timeRemaining = (!$newPageArray['IsNewSection']) ? $post['timeRemaining'] : McatSection::getSectionTime($newPageArray['PageType'], $newPageArray['Section']);
+//             $this->updateExamState($timeRemaining, $newPageArray['PageNumber']);
+//             $redirectString = '/full-length/' . $newPageArray['PageType'] . '-page/' . $this->examId . '/';
+//             $redirectString .= $this->fullLengthNumber . '/' . $newPageArray['PageNumber'] . (isset($post['previous']) ? '?p' : '');
+//             $this->app->redirect($redirectString);
         }
-
-        $firstPage = $this->findFirstPageOfSection();
-        $previous = (isset($_GET['p'])) ? true : false;
-        $timeRemaining = $this->getTimeRemaining();
-        $x = $this->retrieveAnnotations();
-        $annotationCount = $x['AnnotationCount'];
-        $passage = ($x['AnnotationCount'] == 0) ? $this->retrievePassage() : $x['Annotation'];
-        $items = $this->retrieveItems();
-        $paginationArray = $this->getContentPaginationArray();
-        echo 'hello friendly world';
+//
+//         $firstPage = $this->findFirstPageOfSection();
+//         $previous = (isset($_GET['p'])) ? true : false;
+//         $timeRemaining = $this->getTimeRemaining();
+//         $x = $this->retrieveAnnotations();
+//         $annotationCount = $x['AnnotationCount'];
+//         $passage = ($x['AnnotationCount'] == 0) ? $this->retrievePassage() : $x['Annotation'];
+//         $items = $this->retrieveItems();
+//         $paginationArray = $this->getContentPaginationArray();
 //         $this->app->render(
 //             'content-page.phtml',
 //             array(
