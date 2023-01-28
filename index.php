@@ -159,52 +159,52 @@ $app->map(
         }
     },
     function ($pageType, $examId, $fullLengthNumber, $pageNumber) use ($app) {
-        echo 'hello friendly world';
+        echo 'hello yoda world';
         //Validate that query parameters are all integers.
-//         $examId = filter_var($examId, FILTER_VALIDATE_INT);
-//         $fullLengthNumber = filter_var($fullLengthNumber, FILTER_VALIDATE_INT, array('options' => array('min_range' => 1, 'max_range' => 5)));
-//         $pageNumber = filter_var($pageNumber, FILTER_VALIDATE_INT, array('options' => array('min_range' => 1, 'max_range' => 100)));
-//
-//         //Log them out if any of the validators fail.
-//         if (!$examId || !$fullLengthNumber || !$pageNumber) {
-//             unset($_SESSION);
-//             $app->redirect('/');
-//         }
-//
-//         //If its a post, validate post data.
-//         if ($app->request->isPost()) {
-//             $post = $app->request->post();
-//             //white list of every possible post parameter key that is not numeric
-//             $whiteListKeys = array('timeRemaining', 'next', 'previous', 'iAgree', 'endSection', 'end', 'review', 'reviewAll', 'reviewMarked', 'reviewIncomplete', 'void', 'yes', 'annotation', 'annotationCount', 'annotationChanged');
-//
-//             //white list of every possible post parameter value that is not numeric
-//             $whiteListValues = array('NULL', 'NEXT', 'END TUTORIAL', 'END BREAK', 'PREVIOUS', 'I AGREE', 'END SECTION', 'REVIEW', 'REVIEW ALL', 'REVIEW MARKED', 'REVIEW INCOMPLETE', 'VOID', 'SCORE', 'BEGIN EXAM', 'FALSE', 'TRUE');
-//             echo '<br/><br/><br/><br/>';
-//             //Strategy: If the key is numeric, let the contentPageAction handle it. If it is not numeric,
-//             //1)Make sure the key is on the key white list.
-//             //2)Except for annotations, make sure the value is either numeric or on the value white list.
-//             foreach ($post as $key => $value) {
-//                 if (!is_numeric($key)) {
-//                     if (!in_array($key, $whiteListKeys)) {
-//                         unset($_SESSION);
-//                         $app->redirect('/');
-//                     }
-//                     if ($key == 'annotation') {
-//                         //filter annotations
-//                         $allowedTags = '<p><b><em><i><ul><ol><li><small><figure><figcaption>';
-//                         $allowedTags .= '<br><br/><img><span><sup><sub><h3><strong>';
-//                         $allowedTags .= '<table><caption><thead><tbody><td><tr><th>';
-//                         if ($post['annotation'] != strip_tags($post['annotation'], $allowedTags)) {
-//                             $app->flash('message', 'some tags were uploaded that didnt pass the filter');
-//                             $app->redirect('/user');
-//                         }
-//                     } elseif (!(in_array($value, $whiteListValues) || is_numeric($value))) {
-//                         unset($_SESSION);
-//                         $app->redirect('/');
-//                     }
-//                 }
-//             }
-//        }
+        $examId = filter_var($examId, FILTER_VALIDATE_INT);
+        $fullLengthNumber = filter_var($fullLengthNumber, FILTER_VALIDATE_INT, array('options' => array('min_range' => 1, 'max_range' => 5)));
+        $pageNumber = filter_var($pageNumber, FILTER_VALIDATE_INT, array('options' => array('min_range' => 1, 'max_range' => 100)));
+
+        //Log them out if any of the validators fail.
+        if (!$examId || !$fullLengthNumber || !$pageNumber) {
+            unset($_SESSION);
+            $app->redirect('/');
+        }
+
+        //If its a post, validate post data.
+        if ($app->request->isPost()) {
+            $post = $app->request->post();
+            //white list of every possible post parameter key that is not numeric
+            $whiteListKeys = array('timeRemaining', 'next', 'previous', 'iAgree', 'endSection', 'end', 'review', 'reviewAll', 'reviewMarked', 'reviewIncomplete', 'void', 'yes', 'annotation', 'annotationCount', 'annotationChanged');
+
+            //white list of every possible post parameter value that is not numeric
+            $whiteListValues = array('NULL', 'NEXT', 'END TUTORIAL', 'END BREAK', 'PREVIOUS', 'I AGREE', 'END SECTION', 'REVIEW', 'REVIEW ALL', 'REVIEW MARKED', 'REVIEW INCOMPLETE', 'VOID', 'SCORE', 'BEGIN EXAM', 'FALSE', 'TRUE');
+            echo '<br/><br/><br/><br/>';
+            //Strategy: If the key is numeric, let the contentPageAction handle it. If it is not numeric,
+            //1)Make sure the key is on the key white list.
+            //2)Except for annotations, make sure the value is either numeric or on the value white list.
+            foreach ($post as $key => $value) {
+                if (!is_numeric($key)) {
+                    if (!in_array($key, $whiteListKeys)) {
+                        unset($_SESSION);
+                        $app->redirect('/');
+                    }
+                    if ($key == 'annotation') {
+                        //filter annotations
+                        $allowedTags = '<p><b><em><i><ul><ol><li><small><figure><figcaption>';
+                        $allowedTags .= '<br><br/><img><span><sup><sub><h3><strong>';
+                        $allowedTags .= '<table><caption><thead><tbody><td><tr><th>';
+                        if ($post['annotation'] != strip_tags($post['annotation'], $allowedTags)) {
+                            $app->flash('message', 'some tags were uploaded that didnt pass the filter');
+                            $app->redirect('/user');
+                        }
+                    } elseif (!(in_array($value, $whiteListValues) || is_numeric($value))) {
+                        unset($_SESSION);
+                        $app->redirect('/');
+                    }
+                }
+            }
+       }
 
         //Make sure this exam belongs to the user and retrieve its status.
 //         $sql = 'SELECT Status FROM exams WHERE ExamId = :examId AND UserId = :userId';
