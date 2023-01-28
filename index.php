@@ -159,7 +159,7 @@ $app->map(
         }
     },
     function ($pageType, $examId, $fullLengthNumber, $pageNumber) use ($app) {
-        echo 'hello yoda world';
+        echo 'hello yoda soda';
         //Validate that query parameters are all integers.
         $examId = filter_var($examId, FILTER_VALIDATE_INT);
         $fullLengthNumber = filter_var($fullLengthNumber, FILTER_VALIDATE_INT, array('options' => array('min_range' => 1, 'max_range' => 5)));
@@ -267,6 +267,7 @@ $app->map(
             $stmt->execute(array(':fullLengthNumber' => $fullLengthNumber, ':userId' => $_SESSION['user_id']));
             $_SESSION['cfl'] = $fullLengthNumber;
         }
+        echo 'Yoda Soda 2';
 //
 //         //Inject the proctor controller with its parameters.
 //         $controller = new Controller\ProctorController();
