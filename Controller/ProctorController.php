@@ -227,8 +227,8 @@ class ProctorController
         $firstPage = $this->findFirstPageOfSection();
         $previous = (isset($_GET['p'])) ? true : false;
         $timeRemaining = $this->getTimeRemaining();
-//         $x = $this->retrieveAnnotations();
-//         $annotationCount = $x['AnnotationCount'];
+        $x = $this->retrieveAnnotations();
+        $annotationCount = $x['AnnotationCount'];
 //         $passage = ($x['AnnotationCount'] == 0) ? $this->retrievePassage() : $x['Annotation'];
 //         $items = $this->retrieveItems();
 //         $paginationArray = $this->getContentPaginationArray();
