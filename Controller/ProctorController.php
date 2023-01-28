@@ -236,10 +236,10 @@ class ProctorController
         $this->app->render(
             'content-page.phtml',
             array(
-                'items' => $items,
-                'currentSection' => $firstPage['Section'],
-                'previous' => $previous,
-                'passage' => $passage,
+                //'items' => $items,
+                //'currentSection' => $firstPage['Section'],
+                //'previous' => $previous,
+                //'passage' => $passage,
                 //'annotationCount' => $annotationCount,
                 'timeRemaining' => $timeRemaining,
                 'paginationArray' => $paginationArray,
