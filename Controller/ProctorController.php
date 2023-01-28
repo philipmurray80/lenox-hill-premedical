@@ -241,8 +241,8 @@ class ProctorController
                 //'previous' => $previous,
                 //'passage' => $passage,
                 //'annotationCount' => $annotationCount,
-                'timeRemaining' => $timeRemaining,
-                'paginationArray' => $paginationArray,
+                //'timeRemaining' => $timeRemaining,
+                //'paginationArray' => $paginationArray,
                 'examId' => $this->examId,
                 'fullLengthNumber' => $this->fullLengthNumber,
                 'pageNumber' => $this->pageNumber
