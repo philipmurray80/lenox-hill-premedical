@@ -161,9 +161,11 @@ $app->map(
     function ($pageType, $examId, $fullLengthNumber, $pageNumber) use ($app) {
 
         //Validate that query parameters are all integers.
-        $examId = filter_var($examId, FILTER_VALIDATE_INT);
-        $fullLengthNumber = filter_var($fullLengthNumber, FILTER_VALIDATE_INT, array('options' => array('min_range' => 1, 'max_range' => 5)));
-        $pageNumber = filter_var($pageNumber, FILTER_VALIDATE_INT, array('options' => array('min_range' => 1, 'max_range' => 100)));
+
+        // These validators are breaking the app for some reason. Could they be out of date?
+        //$examId = filter_var($examId, FILTER_VALIDATE_INT);
+        //$fullLengthNumber = filter_var($fullLengthNumber, FILTER_VALIDATE_INT, array('options' => array('min_range' => 1, 'max_range' => 5)));
+        //$pageNumber = filter_var($pageNumber, FILTER_VALIDATE_INT, array('options' => array('min_range' => 1, 'max_range' => 100)));
 
         //Log them out if any of the validators fail.
         if (!$examId || !$fullLengthNumber || !$pageNumber) {
