@@ -2,7 +2,6 @@
 namespace Controller;
 
 use Slim\Slim;
-use google\appengine\api\cloud_storage\CloudStorageTools;
 
 class WriterController
 {

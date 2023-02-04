@@ -5,8 +5,6 @@ use Slim\Slim;
 use Model\McatSection;
 use Model\McatItem;
 
-//use google\appengine\api\cloud_storage\CloudStorageTools;
-
 
 class ProctorController
 {
