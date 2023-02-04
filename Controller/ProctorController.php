@@ -936,23 +936,23 @@ class ProctorController
     {
         $text = $passage['PassageText'];
         if (!(strpos($text, '__PIC1__') === false)) {
-            $url = getenv('LHP_FULL_LENGTH_BUCKET') . $passage['PassageImage1'];
+            $url = 'public/images/' . $passage['PassageImage1'];
             $text = str_replace('__PIC1__', '<img src="'.$url.'">', $text);
         }
         if (!(strpos($text, '__PIC2__') === false)) {
-            $url = getenv('LHP_FULL_LENGTH_BUCKET') . $passage['PassageImage2'];
+            $url = 'public/images/' .  $passage['PassageImage2'];
             $text = str_replace('__PIC2__', '<img src="'.$url.'">', $text);
         }
         if (!(strpos($text, '__PIC3__') === false)) {
-            $url = getenv('LHP_FULL_LENGTH_BUCKET') . $passage['PassageImage3'];
+            $url = 'public/images/' . $passage['PassageImage3'];
             $text = str_replace('__PIC3__', '<img src="'.$url.'">', $text);
         }
         if (!(strpos($text, '__PIC4__') === false)) {
-            $url = getenv('LHP_FULL_LENGTH_BUCKET') . $passage['PassageImage4'];
+            $url = 'public/images/' . $passage['PassageImage4'];
             $text = str_replace('__PIC4__', '<img src="'.$url.'">', $text);
         }
         if (!(strpos($text, '__PIC5__') === false)) {
-            $url = getenv('LHP_FULL_LENGTH_BUCKET') . $passage['PassageImage5'];
+            $url = 'public/images/' . $passage['PassageImage5'];
             $text = str_replace('__PIC5__', '<img src="'.$url.'">', $text);
         }
         return $text;
