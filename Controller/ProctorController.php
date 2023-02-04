@@ -936,27 +936,22 @@ class ProctorController
     {
         $text = $passage['PassageText'];
         if (!(strpos($text, '__PIC1__') === false)) {
-            //$url = CloudStorageTools::getPublicUrl('gs://lhp-full-length-images/'.$passage['PassageImage1'], true);
             $url = getenv('LHP_FULL_LENGTH_BUCKET') . $passage['PassageImage1'];
             $text = str_replace('__PIC1__', '<img src="'.$url.'">', $text);
         }
         if (!(strpos($text, '__PIC2__') === false)) {
-            //$url = CloudStorageTools::getPublicUrl('gs://lhp-full-length-images/'.$passage['PassageImage2'], true);
             $url = getenv('LHP_FULL_LENGTH_BUCKET') . $passage['PassageImage2'];
             $text = str_replace('__PIC2__', '<img src="'.$url.'">', $text);
         }
         if (!(strpos($text, '__PIC3__') === false)) {
-            //$url = CloudStorageTools::getPublicUrl('gs://lhp-full-length-images/'.$passage['PassageImage3'], true);
             $url = getenv('LHP_FULL_LENGTH_BUCKET') . $passage['PassageImage3'];
             $text = str_replace('__PIC3__', '<img src="'.$url.'">', $text);
         }
         if (!(strpos($text, '__PIC4__') === false)) {
-            //$url = CloudStorageTools::getPublicUrl('gs://lhp-full-length-images/'.$passage['PassageImage4'], true);
             $url = getenv('LHP_FULL_LENGTH_BUCKET') . $passage['PassageImage4'];
             $text = str_replace('__PIC4__', '<img src="'.$url.'">', $text);
         }
         if (!(strpos($text, '__PIC5__') === false)) {
-            //$url = CloudStorageTools::getPublicUrl('gs://lhp-full-length-images/'.$passage['PassageImage5'], true);
             $url = getenv('LHP_FULL_LENGTH_BUCKET') . $passage['PassageImage5'];
             $text = str_replace('__PIC5__', '<img src="'.$url.'">', $text);
         }
