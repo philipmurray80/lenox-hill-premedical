@@ -191,7 +191,7 @@ class WriterController
                             'Cache-Control' => 'no-cache'
                 ));
                 stream_context_set_default($options);
-                move_uploaded_file($value['tmp_name'], getenv('LHP_FULL_LENGTH_BUCKET').$images[$key]['name']);
+                move_uploaded_file($value['tmp_name'], '/public/images/'.$images[$key]['name']);
             }
 
             //Update passage image names
@@ -423,23 +423,23 @@ class WriterController
     {
         $text = $passage['PassageText'];
         if (!(strpos($text, '__PIC1__') === false)) {
-            $url = getenv('LHP_FULL_LENGTH_BUCKET').$passage['PassageImage1'];
+            $url = '/public/images/'.$passage['PassageImage1'];
             $text = str_replace('__PIC1__', '<img src="'.$url.'">', $text);
         }
         if (!(strpos($text, '__PIC2__') === false)) {
-            $url = getenv('LHP_FULL_LENGTH_BUCKET').$passage['PassageImage2'];
+            $url = '/public/images/'.$passage['PassageImage2'];
             $text = str_replace('__PIC2__', '<img src="'.$url.'">', $text);
         }
         if (!(strpos($text, '__PIC3__') === false)) {
-            $url = getenv('LHP_FULL_LENGTH_BUCKET').$passage['PassageImage3'];
+            $url = '/public/images/'.$passage['PassageImage3'];
             $text = str_replace('__PIC3__', '<img src="'.$url.'">', $text);
         }
         if (!(strpos($text, '__PIC4__') === false)) {
-            $url = getenv('LHP_FULL_LENGTH_BUCKET').$passage['PassageImage4'];
+            $url = '/public/images/'.$passage['PassageImage4'];
             $text = str_replace('__PIC4__', '<img src="'.$url.'">', $text);
         }
         if (!(strpos($text, '__PIC5__') === false)) {
-            $url = getenv('LHP_FULL_LENGTH_BUCKET').$passage['PassageImage5'];
+            $url = '/public/images/'.$passage['PassageImage5'];
             $text = str_replace('__PIC5__', '<img src="'.$url.'">', $text);
         }
         return $text;
@@ -448,39 +448,39 @@ class WriterController
     protected function mapQuestionToQuestionStringWithImage(array $array)
     {
         if (!(strpos($array['QuestionText'], '__PIC__') === false)) {
-            $url = getenv('LHP_FULL_LENGTH_BUCKET').$array['QuestionImage'];
+            $url = '/public/images/'.$array['QuestionImage'];
             $array['QuestionText'] = str_replace('__PIC__', '<img src="'.$url.'">', $array['QuestionText']);
         }
         if (!(strpos($array['AnswerText'], '__PIC__') === false)) {
-            $url = getenv('LHP_FULL_LENGTH_BUCKET').$array['AnswerImage'];
+            $url = '/public/images/'.$array['AnswerImage'];
             $array['AnswerText'] = str_replace('__PIC__', '<img src="'.$url.'">', $array['AnswerText']);
         }
         if (!(strpos($array['Distractor1Text'], '__PIC__') === false)) {
-            $url = getenv('LHP_FULL_LENGTH_BUCKET').$array['Distractor1Image'];
+            $url = '/public/images/'.$array['Distractor1Image'];
             $array['Distractor1Text'] = str_replace('__PIC__', '<img src="'.$url.'">', $array['Distractor1Text']);
         }
         if (!(strpos($array['Distractor2Text'], '__PIC__') === false)) {
-            $url = getenv('LHP_FULL_LENGTH_BUCKET').$array['Distractor2Image'];
+            $url = '/public/images/'.$array['Distractor2Image'];
             $array['Distractor2Text'] = str_replace('__PIC__', '<img src="'.$url.'">', $array['Distractor2Text']);
         }
         if (!(strpos($array['Distractor3Text'], '__PIC__') === false)) {
-            $url = getenv('LHP_FULL_LENGTH_BUCKET').$array['Distractor3Image'];
+            $url = '/public/images/'.$array['Distractor3Image'];
             $array['Distractor3Text'] = str_replace('__PIC__', '<img src="'.$url.'">', $array['Distractor3Text']);
         }
         if (!(strpos($array['ExplanationText'], '__PIC__') === false)) {
-            $url = getenv('LHP_FULL_LENGTH_BUCKET').$array['ExplanationImage'];
+            $url = '/public/images/'.$array['ExplanationImage'];
             $array['ExplanationText'] = str_replace('__PIC__', '<img src="'.$url.'">', $array['ExplanationText']);
         }
         if (!(strpos($array['Pathology1Text'], '__PIC__') === false)) {
-            $url = getenv('LHP_FULL_LENGTH_BUCKET').$array['Pathology1Image'];
+            $url = '/public/images/'.$array['Pathology1Image'];
             $array['Pathology1Text'] = str_replace('__PIC__', '<img src="'.$url.'">', $array['Pathology1Text']);
         }
         if (!(strpos($array['Pathology2Text'], '__PIC__') === false)) {
-            $url = getenv('LHP_FULL_LENGTH_BUCKET').$array['Pathology2Image'];
+            $url = '/public/images/'.$array['Pathology2Image'];
             $array['Pathology2Text'] = str_replace('__PIC__', '<img src="'.$url.'">', $array['Pathology2Text']);
         }
         if (!(strpos($array['Pathology3Text'], '__PIC__') === false)) {
-            $url = getenv('LHP_FULL_LENGTH_BUCKET').$array['Pathology3Image'];
+            $url = '/public/images/'.$array['Pathology3Image'];
             $array['Pathology3Text'] = str_replace('__PIC__', '<img src="'.$url.'">', $array['Pathology3Text']);
         }
         return $array;

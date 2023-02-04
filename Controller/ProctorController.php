@@ -890,8 +890,7 @@ class ProctorController
     protected function mapItemStringToItemStringWithImage(array $array)
     {
         if (!(strpos($array[0], '__PIC__') === false)) {
-            $url = getenv('LHP_FULL_LENGTH_BUCKET') . $array[1];
-            //$url = CloudStorageTools::getPublicUrl('gs://lhp-full-length-images/'.$array[1], true);
+            $url = '/public/images/' . $array[1];
             return str_replace('__PIC__', '<img src="'.$url.'">', $array[0]);
         }
         return $array[0];
